@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600" fill="none">
+  <rect width="800" height="600" fill="#E8EBF0"/>
+  <path d="M140 390h220l40-90h90l30 90h140v40H140v-40z" fill="#0B1F3A"/>
+  <circle cx="230" cy="440" r="36" fill="#12161C"/>
+  <circle cx="230" cy="440" r="16" fill="#B0892C"/>
+  <circle cx="560" cy="440" r="36" fill="#12161C"/>
+  <circle cx="560" cy="440" r="16" fill="#B0892C"/>
+  <path d="M260 300h90l70-80 90 20-30 60" stroke="#0B1F3A" stroke-width="18" fill="none"/>
+  <rect x="340" y="200" width="70" height="36" fill="#B0892C"/>
+  <text x="400" y="140" text-anchor="middle" fill="#0B1F3A" font-family="Arial, sans-serif" font-size="22" letter-spacing="3">LENDRITI GROUP</text>
+</svg>

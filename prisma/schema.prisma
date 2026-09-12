@@ -1,0 +1,136 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model AdminUser {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String   @default("Administrator")
+  createdAt    DateTime @default(now())
+}
+
+model Machine {
+  id     String @id @default(cuid())
+  slug   String @unique
+
+  category     String // excavator | truck | other
+  manufacturer String
+  model        String
+  year         Int?
+
+  askingPrice   Float?
+  currency      String  @default("EUR")
+  vatIncluded   Boolean @default(false)
+  priceOnRequest Boolean @default(false)
+
+  location     String?
+  country      String?
+  condition    String? // new | used | refurbished
+  availability String? // immediately | short | on_order
+  stockNumber  String?
+  serialNumber String?
+  description  String?
+  sellerInfo   String?
+  additionalInfo String?
+
+  status   String  @default("draft") // draft | active | reserved | sold | archived
+  featured Boolean @default(false)
+
+  hours        Int?
+  kilometres   Int?
+  fuelType     String?
+  transmission String?
+  enginePower  String?
+
+  excavatorSpecs Json?
+  truckSpecs     Json?
+  otherSpecs     Json?
+
+  videoUrl   String?
+  youtubeUrl String?
+  vimeoUrl   String?
+
+  // Private purchase accounting — never sent to public APIs
+  purchasePrice      Float?
+  purchaseCurrency   String  @default("EUR")
+  purchaseDate       DateTime?
+  supplier           String?
+  purchaseLocation   String?
+  transportCost      Float   @default(0)
+  repairCost         Float   @default(0)
+  otherPurchaseCosts Float   @default(0)
+
+  // Private sale accounting
+  actualSellingPrice Float?
+  sellingCurrency    String    @default("EUR")
+  saleDate           DateTime?
+  buyer              String?
+  sellingCosts       Float     @default(0)
+  otherSaleCosts     Float     @default(0)
+  saleNotes          String?
+
+  seoTitle       String?
+  seoDescription String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  photos     Photo[]
+  documents  Document[]
+  inquiries  Inquiry[]
+
+  @@index([category, status])
+  @@index([manufacturer])
+  @@index([createdAt])
+  @@index([status])
+}
+
+model Photo {
+  id         String  @id @default(cuid())
+  machineId  String
+  machine    Machine @relation(fields: [machineId], references: [id], onDelete: Cascade)
+  url        String
+  alt        String?
+  orderIndex Int     @default(0)
+  isMain     Boolean @default(false)
+  createdAt  DateTime @default(now())
+}
+
+model Document {
+  id        String   @id @default(cuid())
+  machineId String
+  machine   Machine  @relation(fields: [machineId], references: [id], onDelete: Cascade)
+  url       String
+  title     String
+  type      String   @default("pdf")
+  createdAt DateTime @default(now())
+}
+
+model Inquiry {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  message   String
+  machineId String?
+  machine   Machine? @relation(fields: [machineId], references: [id], onDelete: SetNull)
+  status    String   @default("new") // new | read | archived
+  createdAt DateTime @default(now())
+}
+
+model PageContent {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  contentEn String?
+  contentFi String?
+  contentSv String?
+  contentSq String?
+  contentDe String?
+  updatedAt DateTime @updatedAt
+}

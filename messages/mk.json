@@ -1,0 +1,142 @@
+{
+  "splash": {
+    "enter": "ВЛЕЗ"
+  },
+  "nav": {
+    "home": "Дома",
+    "catalog": "Каталог",
+    "about": "За нас",
+    "contact": "Контакт",
+    "postProduct": "Објави производ",
+    "admin": "Админ",
+    "logout": "Одјава"
+  },
+  "home": {
+    "companyName": "Lendriti Group SHPK",
+    "heroTitle": "Најдете тешки возила и опрема. Ако не го најдете кај нас, ќе го набавиме за вас.",
+    "heroSubtitle": "Камиони, багери, резервни делови и услуги – сè на едно место",
+    "searchPlaceholder": "Пребарај по име, бренд или модел...",
+    "category": "Категорија",
+    "priceRange": "Цена (EUR)",
+    "search": "Пребарај",
+    "categories": {
+      "trucks": "Камиони",
+      "excavators": "Багери",
+      "parts": "Резервни делови",
+      "attachments": "Опрема/Приклучоци",
+      "services": "Услуги"
+    },
+    "categoriesTitle": "Прегледај по категорија",
+    "featured": "Истакнати огласи",
+    "trust": {
+      "years": "Години искуство",
+      "verified": "Верифицирани огласи",
+      "fastResponse": "Брз одговор",
+      "secure": "Сигурни трансакции"
+    }
+  },
+  "catalog": {
+    "title": "Каталог на производи",
+    "filters": "Филтри",
+    "sortBy": "Сортирај по",
+    "sort": {
+      "newest": "Најнови",
+      "priceAsc": "Цена: растечки",
+      "priceDesc": "Цена: опаѓачки",
+      "year": "Година",
+      "hours": "Часови",
+      "km": "Километри"
+    },
+    "results": "резултати",
+    "noResults": "Не се пронајдени производи",
+    "loadMore": "Вчитај повеќе",
+    "filter": {
+      "keyword": "Клучни збор",
+      "category": "Категорија",
+      "brand": "Бренд",
+      "model": "Модел",
+      "yearRange": "Година",
+      "priceRange": "Цена (EUR)",
+      "hours": "Часови",
+      "km": "Километри",
+      "condition": "Состојба",
+      "location": "Локација",
+      "status": "Статус"
+    },
+    "condition": {
+      "new": "Ново",
+      "used": "Користено"
+    },
+    "status": {
+      "available": "Достапно",
+      "sold": "Продадено"
+    }
+  },
+  "product": {
+    "contactAbout": "Контактирај за овој артикл",
+    "whatsapp": "WhatsApp",
+    "specs": "Спецификации",
+    "description": "Опис",
+    "attachments": "Приклучоци",
+    "condition": "Состојба",
+    "location": "Локација",
+    "year": "Година",
+    "hours": "Часови",
+    "km": "Километри",
+    "priceOnRequest": "Цена на барање",
+    "negotiable": "Може да се преговара",
+    "available": "Достапно",
+    "sold": "Продадено"
+  },
+  "about": {
+    "title": "За нас",
+    "company": "Компанија",
+    "services": "Услуги",
+    "mission": "Мисија",
+    "location": "Локација",
+    "whyChoose": "Зошто да нè изберете"
+  },
+  "contact": {
+    "title": "Контактирајте нè",
+    "subtitle": "Испратете ни порака и ќе ви одговориме што побрзо",
+    "name": "Име",
+    "email": "Е-пошта",
+    "phone": "Телефон",
+    "message": "Порака",
+    "productRef": "Референца на производ (опционално)",
+    "send": "Испрати",
+    "success": "Пораката е успешно испратена!",
+    "error": "Се случи грешка. Ве молиме обидете се повторно."
+  },
+  "admin": {
+    "login": "Најава",
+    "email": "Е-пошта",
+    "password": "Лозинка",
+    "products": "Производи",
+    "categories": "Категории",
+    "about": "За нас",
+    "messages": "Пораки",
+    "reports": "Извештаи",
+    "dashboard": "Контролна табла",
+    "addProduct": "Додај производ",
+    "editProduct": "Измени производ",
+    "deleteProduct": "Избриши производ",
+    "markSold": "Означи како продадено",
+    "bulkActions": "Групни акции",
+    "export": "Извези CSV",
+    "search": "Пребарај"
+  },
+  "reports": {
+    "totalProducts": "Вкупно производи",
+    "availableCount": "Достапни производи",
+    "availableValue": "Вредност на залиха",
+    "soldCount": "Продадени производи",
+    "soldValue": "Вредност на продажба",
+    "byCategory": "По категорија"
+  },
+  "validation": {
+    "required": "Ова поле е задолжително",
+    "email": "Невалидна е-пошта",
+    "minLength": "Минимум {min} карактери"
+  }
+}
