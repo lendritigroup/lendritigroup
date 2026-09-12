@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import { prisma, withDatabase } from "@/lib/prisma";
 import { locales, type Locale } from "@/i18n/config";
 
 export const SITE_CONTENT_KEYS = [
@@ -123,24 +123,32 @@ export function defaultSiteText(key: SiteContentKey, locale: string) {
 }
 
 export async function getSiteText(key: SiteContentKey, locale: string) {
-  const row = await prisma.pageContent.findUnique({ where: { key } });
-  const value = row?.[localeField(locale)]?.trim();
-  return value || defaultSiteText(key, locale);
+  return withDatabase(async () => {
+    const row = await prisma.pageContent.findUnique({ where: { key } });
+    const value = row?.[localeField(locale)]?.trim();
+    return value || defaultSiteText(key, locale);
+  }, defaultSiteText(key, locale));
 }
 
 export async function getSiteTexts(locale: string) {
-  const rows = await prisma.pageContent.findMany({
-    where: { key: { in: [...SITE_CONTENT_KEYS] } },
-  });
-  const byKey = Object.fromEntries(rows.map((row) => [row.key, row]));
-  const field = localeField(locale);
-
-  return Object.fromEntries(
-    SITE_CONTENT_KEYS.map((key) => {
-      const value = byKey[key]?.[field]?.trim();
-      return [key, value || defaultSiteText(key, locale)];
-    })
+  const fallback = Object.fromEntries(
+    SITE_CONTENT_KEYS.map((key) => [key, defaultSiteText(key, locale)])
   ) as Record<SiteContentKey, string>;
+
+  return withDatabase(async () => {
+    const rows = await prisma.pageContent.findMany({
+      where: { key: { in: [...SITE_CONTENT_KEYS] } },
+    });
+    const byKey = Object.fromEntries(rows.map((row) => [row.key, row]));
+    const field = localeField(locale);
+
+    return Object.fromEntries(
+      SITE_CONTENT_KEYS.map((key) => {
+        const value = byKey[key]?.[field]?.trim();
+        return [key, value || defaultSiteText(key, locale)];
+      })
+    ) as Record<SiteContentKey, string>;
+  }, fallback);
 }
 
 export type SiteContentDraft = Record<SiteContentKey, Record<Locale, string>>;

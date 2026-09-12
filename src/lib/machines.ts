@@ -1,5 +1,5 @@
 import type { Machine, Photo, Document } from "@prisma/client";
-import { prisma } from "./prisma";
+import { prisma, withDatabase } from "./prisma";
 import { CATEGORY_FROM_SLUG, type ListingStatus, type MachineCategory } from "./company";
 import { specsRecord } from "./specs";
 import type { AdminMachine, MachineFilters, PublicMachine } from "@/types/machine";
@@ -153,13 +153,14 @@ function orderBy(sort?: string) {
 const include = { photos: true, documents: true };
 
 export async function listPublicMachines(params: MachineFilters = {}) {
-  const status = params.status;
-  const machines = await prisma.machine.findMany({
-    where: applyFilters({ ...params, status }, true),
-    include,
-    orderBy: orderBy(params.sort),
-  });
-  return machines.map(toPublic);
+  return withDatabase(async () => {
+    const machines = await prisma.machine.findMany({
+      where: applyFilters({ ...params, status: params.status }, true),
+      include,
+      orderBy: orderBy(params.sort),
+    });
+    return machines.map(toPublic);
+  }, []);
 }
 
 export async function listPublicByCategory(categorySlug: string, params: MachineFilters = {}) {
@@ -167,61 +168,76 @@ export async function listPublicByCategory(categorySlug: string, params: Machine
 }
 
 export async function getFeaturedMachines(limit = 4) {
-  const machines = await prisma.machine.findMany({
-    where: { status: "active", featured: true },
-    include,
-    orderBy: { createdAt: "desc" },
-    take: limit,
-  });
-  return machines.map(toPublic);
+  return withDatabase(async () => {
+    const machines = await prisma.machine.findMany({
+      where: { status: "active", featured: true },
+      include,
+      orderBy: { createdAt: "desc" },
+      take: limit,
+    });
+    return machines.map(toPublic);
+  }, []);
 }
 
 export async function getRecentMachines(limit = 6) {
-  const machines = await prisma.machine.findMany({
-    where: { status: "active" },
-    include,
-    orderBy: { createdAt: "desc" },
-    take: limit,
-  });
-  return machines.map(toPublic);
+  return withDatabase(async () => {
+    const machines = await prisma.machine.findMany({
+      where: { status: "active" },
+      include,
+      orderBy: { createdAt: "desc" },
+      take: limit,
+    });
+    return machines.map(toPublic);
+  }, []);
 }
 
 export async function getPublicMachine(categorySlug: string, slug: string) {
   const category = CATEGORY_FROM_SLUG[categorySlug];
   if (!category) return null;
-  const machine = await prisma.machine.findFirst({
-    where: {
-      slug,
-      category,
-      status: { in: ["active", "reserved", "sold"] },
-    },
-    include,
-  });
-  return machine ? toPublic(machine) : null;
+  return withDatabase(async () => {
+    const machine = await prisma.machine.findFirst({
+      where: {
+        slug,
+        category,
+        status: { in: ["active", "reserved", "sold"] },
+      },
+      include,
+    });
+    return machine ? toPublic(machine) : null;
+  }, null);
 }
 
 export async function getFilterOptions() {
-  const machines = await prisma.machine.findMany({
-    where: { status: { in: PUBLIC_STATUSES } },
-    select: {
-      manufacturer: true,
-      model: true,
-      location: true,
-      country: true,
-      fuelType: true,
-      transmission: true,
-    },
+  return withDatabase(async () => {
+    const machines = await prisma.machine.findMany({
+      where: { status: { in: PUBLIC_STATUSES } },
+      select: {
+        manufacturer: true,
+        model: true,
+        location: true,
+        country: true,
+        fuelType: true,
+        transmission: true,
+      },
+    });
+    const uniq = (key: keyof (typeof machines)[number]) =>
+      [...new Set(machines.map((m) => m[key]).filter(Boolean) as string[])].sort();
+    return {
+      manufacturers: uniq("manufacturer"),
+      models: uniq("model"),
+      locations: uniq("location"),
+      countries: uniq("country"),
+      fuelTypes: uniq("fuelType"),
+      transmissions: uniq("transmission"),
+    };
+  }, {
+    manufacturers: [],
+    models: [],
+    locations: [],
+    countries: [],
+    fuelTypes: [],
+    transmissions: [],
   });
-  const uniq = (key: keyof (typeof machines)[number]) =>
-    [...new Set(machines.map((m) => m[key]).filter(Boolean) as string[])].sort();
-  return {
-    manufacturers: uniq("manufacturer"),
-    models: uniq("model"),
-    locations: uniq("location"),
-    countries: uniq("country"),
-    fuelTypes: uniq("fuelType"),
-    transmissions: uniq("transmission"),
-  };
 }
 
 export async function listAdminMachines() {
