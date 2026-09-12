@@ -6,6 +6,7 @@ import { fieldsForCategory } from "@/lib/specs";
 import { formatMoney, summarizeFinance } from "@/lib/finance";
 import { localePath } from "@/lib/paths";
 import { machineSlug } from "@/lib/slug";
+import type { MachineCategory } from "@/lib/company";
 import type { AdminMachine } from "@/types/machine";
 
 function dateInput(value?: string | null) {
@@ -28,7 +29,7 @@ export function MachineForm({
   machine?: AdminMachine;
 }) {
   const router = useRouter();
-  const [category, setCategory] = useState(machine?.category ?? "excavator");
+  const [category, setCategory] = useState<MachineCategory>(machine?.category ?? "excavator");
   const [photos, setPhotos] = useState<string[]>(machine?.photos.map((p) => p.url) ?? []);
   const [mainIndex, setMainIndex] = useState(Math.max(0, machine?.photos.findIndex((p) => p.isMain) ?? 0));
   const [docs, setDocs] = useState<{ url: string; title: string }[]>(
@@ -153,7 +154,14 @@ export function MachineForm({
     >
       <Section title="General information">
         <div className="grid gap-4 sm:grid-cols-2">
-          <Select label="Category" value={category} onChange={setCategory} options={[["excavator", "Excavator"], ["truck", "Truck"], ["other", "Other machinery"]]} />
+          <Select
+            label="Category"
+            value={category}
+            onChange={(v) => {
+              if (v === "excavator" || v === "truck" || v === "other") setCategory(v);
+            }}
+            options={[["excavator", "Excavator"], ["truck", "Truck"], ["other", "Other machinery"]]}
+          />
           <label className="block text-sm">
             Status
             <select name="status" defaultValue={machine?.status ?? "draft"} className="mt-1 h-10 w-full border border-border px-3">

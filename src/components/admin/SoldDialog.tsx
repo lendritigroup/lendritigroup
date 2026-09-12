@@ -92,7 +92,7 @@ export function SoldDialog({
             </label>
             <label className="block text-sm">
               Other costs
-              <input name="otherSaleCosts" type="number" value={other} onChange={(e) => setOther(e.target.value)} className="mt-1 h-10 w-full border px-3" />
+              <input name="otherSaleCosts" type="number" value={otherSaleCosts} onChange={(e) => setOther(e.target.value)} className="mt-1 h-10 w-full border px-3" />
             </label>
             <label className="block text-sm">
               Notes
