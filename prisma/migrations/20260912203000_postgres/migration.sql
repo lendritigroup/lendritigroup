@@ -1,21 +1,23 @@
 -- CreateTable
 CREATE TABLE "AdminUser" (
-    "id" TEXT NOT NULL PRIMARY KEY,
+    "id" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "passwordHash" TEXT NOT NULL,
     "name" TEXT NOT NULL DEFAULT 'Administrator',
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "AdminUser_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "Machine" (
-    "id" TEXT NOT NULL PRIMARY KEY,
+    "id" TEXT NOT NULL,
     "slug" TEXT NOT NULL,
     "category" TEXT NOT NULL,
     "manufacturer" TEXT NOT NULL,
     "model" TEXT NOT NULL,
     "year" INTEGER,
-    "askingPrice" REAL,
+    "askingPrice" DOUBLE PRECISION,
     "currency" TEXT NOT NULL DEFAULT 'EUR',
     "vatIncluded" BOOLEAN NOT NULL DEFAULT false,
     "priceOnRequest" BOOLEAN NOT NULL DEFAULT false,
@@ -41,73 +43,80 @@ CREATE TABLE "Machine" (
     "videoUrl" TEXT,
     "youtubeUrl" TEXT,
     "vimeoUrl" TEXT,
-    "purchasePrice" REAL,
+    "purchasePrice" DOUBLE PRECISION,
     "purchaseCurrency" TEXT NOT NULL DEFAULT 'EUR',
-    "purchaseDate" DATETIME,
+    "purchaseDate" TIMESTAMP(3),
     "supplier" TEXT,
     "purchaseLocation" TEXT,
-    "transportCost" REAL NOT NULL DEFAULT 0,
-    "repairCost" REAL NOT NULL DEFAULT 0,
-    "otherPurchaseCosts" REAL NOT NULL DEFAULT 0,
-    "actualSellingPrice" REAL,
+    "transportCost" DOUBLE PRECISION NOT NULL DEFAULT 0,
+    "repairCost" DOUBLE PRECISION NOT NULL DEFAULT 0,
+    "otherPurchaseCosts" DOUBLE PRECISION NOT NULL DEFAULT 0,
+    "actualSellingPrice" DOUBLE PRECISION,
     "sellingCurrency" TEXT NOT NULL DEFAULT 'EUR',
-    "saleDate" DATETIME,
+    "saleDate" TIMESTAMP(3),
     "buyer" TEXT,
-    "sellingCosts" REAL NOT NULL DEFAULT 0,
-    "otherSaleCosts" REAL NOT NULL DEFAULT 0,
+    "sellingCosts" DOUBLE PRECISION NOT NULL DEFAULT 0,
+    "otherSaleCosts" DOUBLE PRECISION NOT NULL DEFAULT 0,
     "saleNotes" TEXT,
     "seoTitle" TEXT,
     "seoDescription" TEXT,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" DATETIME NOT NULL
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Machine_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "Photo" (
-    "id" TEXT NOT NULL PRIMARY KEY,
+    "id" TEXT NOT NULL,
     "machineId" TEXT NOT NULL,
     "url" TEXT NOT NULL,
     "alt" TEXT,
     "orderIndex" INTEGER NOT NULL DEFAULT 0,
     "isMain" BOOLEAN NOT NULL DEFAULT false,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT "Photo_machineId_fkey" FOREIGN KEY ("machineId") REFERENCES "Machine" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "Photo_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "Document" (
-    "id" TEXT NOT NULL PRIMARY KEY,
+    "id" TEXT NOT NULL,
     "machineId" TEXT NOT NULL,
     "url" TEXT NOT NULL,
     "title" TEXT NOT NULL,
     "type" TEXT NOT NULL DEFAULT 'pdf',
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT "Document_machineId_fkey" FOREIGN KEY ("machineId") REFERENCES "Machine" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "Document_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "Inquiry" (
-    "id" TEXT NOT NULL PRIMARY KEY,
+    "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "phone" TEXT,
     "message" TEXT NOT NULL,
     "machineId" TEXT,
     "status" TEXT NOT NULL DEFAULT 'new',
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT "Inquiry_machineId_fkey" FOREIGN KEY ("machineId") REFERENCES "Machine" ("id") ON DELETE SET NULL ON UPDATE CASCADE
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "Inquiry_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "PageContent" (
-    "id" TEXT NOT NULL PRIMARY KEY,
+    "id" TEXT NOT NULL,
     "key" TEXT NOT NULL,
     "contentEn" TEXT,
     "contentFi" TEXT,
     "contentSv" TEXT,
     "contentSq" TEXT,
     "contentDe" TEXT,
-    "updatedAt" DATETIME NOT NULL
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "PageContent_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -130,3 +139,12 @@ CREATE INDEX "Machine_status_idx" ON "Machine"("status");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "PageContent_key_key" ON "PageContent"("key");
+
+-- AddForeignKey
+ALTER TABLE "Photo" ADD CONSTRAINT "Photo_machineId_fkey" FOREIGN KEY ("machineId") REFERENCES "Machine"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Document" ADD CONSTRAINT "Document_machineId_fkey" FOREIGN KEY ("machineId") REFERENCES "Machine"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Inquiry" ADD CONSTRAINT "Inquiry_machineId_fkey" FOREIGN KEY ("machineId") REFERENCES "Machine"("id") ON DELETE SET NULL ON UPDATE CASCADE;

@@ -13,8 +13,8 @@ export function SplashPage({ locale }: { locale: string }) {
       className="min-h-screen flex flex-col items-center justify-center px-4 relative"
       style={{ backgroundColor: "#ffffff" }}
     >
-      <div className="absolute top-4 right-4 [&_button]:text-[#1F3C7B] [&_button]:border-[#1F3C7B]/30">
-        <LanguageSwitcher />
+      <div className="absolute top-4 right-4">
+        <LanguageSwitcher variant="light" />
       </div>
       <div className="flex flex-col items-center gap-10">
         <div className="overflow-hidden rounded-sm w-[min(95vw,800px)] aspect-[4/3] shrink-0 flex items-center justify-center">

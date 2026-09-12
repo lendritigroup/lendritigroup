@@ -112,6 +112,9 @@ export function Header() {
                   <Link href={localePath(locale, "/sell")} onClick={() => setOpen(false)} className="px-2 py-3 text-lg font-semibold uppercase">
                     {t("sell")}
                   </Link>
+                  <div className="mt-4 px-2">
+                    <LanguageSwitcher />
+                  </div>
                 </nav>
               </SheetContent>
             </Sheet>

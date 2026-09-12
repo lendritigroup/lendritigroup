@@ -8,6 +8,7 @@ import { COMPANY } from "@/lib/company";
 import { localePath } from "@/lib/paths";
 import { defaultLocale, locales, type Locale } from "@/i18n/config";
 import { BrandLogo } from "./BrandLogo";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 
 export function Footer() {
   const t = useTranslations("nav");
@@ -69,9 +70,12 @@ export function Footer() {
         </div>
       </div>
       <div className="border-t border-white/10">
-        <p className="container-lg py-5 text-center text-xs text-white/50">
-          © {new Date().getFullYear()} {COMPANY.name}. {tf("rights")}
-        </p>
+        <div className="container-lg flex flex-col items-center justify-between gap-3 py-5 sm:flex-row">
+          <p className="text-center text-xs text-white/50">
+            © {new Date().getFullYear()} {COMPANY.name}. {tf("rights")}
+          </p>
+          <LanguageSwitcher />
+        </div>
       </div>
     </footer>
   );
