@@ -2,6 +2,8 @@
 
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import { upload } from "@vercel/blob/client";
+import { ImagePlus } from "lucide-react";
 import { fieldsForCategory } from "@/lib/specs";
 import { formatMoney, summarizeFinance } from "@/lib/finance";
 import { localePath } from "@/lib/paths";
@@ -37,6 +39,7 @@ export function MachineForm({
   );
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
+  const [uploading, setUploading] = useState<"photo" | "doc" | null>(null);
   const specFields = useMemo(() => fieldsForCategory(category), [category]);
   const existingSpecs =
     category === "excavator" ? machine?.excavatorSpecs : category === "truck" ? machine?.truckSpecs : machine?.otherSpecs;
@@ -57,15 +60,36 @@ export function MachineForm({
     askingPrice: machine?.askingPrice,
   });
 
-  async function upload(files: FileList | null, kind: "photo" | "doc") {
+  async function uploadFiles(files: FileList | File[] | null, kind: "photo" | "doc") {
     if (!files?.length) return;
-    const form = new FormData();
-    Array.from(files).forEach((f) => form.append("files", f));
-    const res = await fetch("/api/admin/upload", { method: "POST", body: form });
-    const json = await res.json();
-    const urls: string[] = json.urls ?? [];
-    if (kind === "photo") setPhotos((p) => [...p, ...urls]);
-    else setDocs((d) => [...d, ...urls.map((url) => ({ url, title: url.split("/").pop() || "Document" }))]);
+    setUploading(kind);
+    setError(null);
+    try {
+      const urls: string[] = [];
+      for (const file of Array.from(files)) {
+        if (kind === "photo" && !file.type.startsWith("image/")) {
+          throw new Error(`${file.name} is not an image. Choose JPG, PNG, WEBP or GIF.`);
+        }
+        const blob = await upload(file.name, file, {
+          access: "public",
+          handleUploadUrl: "/api/admin/upload",
+        }).catch(async () => {
+          const form = new FormData();
+          form.append("files", file);
+          const res = await fetch("/api/admin/upload", { method: "POST", body: form });
+          const json = await res.json();
+          if (!res.ok) throw new Error(json.error || "Upload failed");
+          return { url: (json.urls ?? [])[0] as string };
+        });
+        if (blob?.url) urls.push(blob.url);
+      }
+      if (kind === "photo") setPhotos((p) => [...p, ...urls]);
+      else setDocs((d) => [...d, ...urls.map((url) => ({ url, title: url.split("/").pop() || "Document" }))]);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Upload failed");
+    } finally {
+      setUploading(null);
+    }
   }
 
   return (
@@ -255,7 +279,31 @@ export function MachineForm({
       </Section>
 
       <Section title="Photos and media">
-        <input type="file" accept="image/*" multiple onChange={(e) => upload(e.target.files, "photo")} />
+        <label
+          className="flex cursor-pointer flex-col items-center justify-center gap-2 border-2 border-dashed border-border bg-muted/30 px-4 py-10 text-center hover:border-navy hover:bg-muted/50"
+          onDragOver={(e) => e.preventDefault()}
+          onDrop={(e) => {
+            e.preventDefault();
+            uploadFiles(e.dataTransfer.files, "photo");
+          }}
+        >
+          <ImagePlus className="size-8 text-navy" />
+          <span className="text-sm font-semibold">
+            {uploading === "photo" ? "Uploading images..." : "Click or drop machine photos"}
+          </span>
+          <span className="text-xs text-muted-foreground">JPG, PNG, WEBP or GIF from your computer. Multiple files allowed.</span>
+          <input
+            type="file"
+            accept="image/jpeg,image/png,image/webp,image/gif,image/avif,.jpg,.jpeg,.png,.webp,.gif"
+            multiple
+            className="sr-only"
+            disabled={uploading !== null}
+            onChange={(e) => {
+              uploadFiles(e.target.files, "photo");
+              e.target.value = "";
+            }}
+          />
+        </label>
         <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
           {photos.map((url, i) => (
             <div key={url} className="border border-border p-2">
@@ -277,7 +325,17 @@ export function MachineForm({
         </div>
         <div className="mt-4">
           <p className="mb-2 text-sm">PDF / documentation</p>
-          <input type="file" accept=".pdf,application/pdf" multiple onChange={(e) => upload(e.target.files, "doc")} />
+          <input
+            type="file"
+            accept=".pdf,application/pdf,image/jpeg,image/png,image/webp"
+            multiple
+            disabled={uploading !== null}
+            onChange={(e) => {
+              uploadFiles(e.target.files, "doc");
+              e.target.value = "";
+            }}
+          />
+          {uploading === "doc" && <p className="mt-1 text-xs text-muted-foreground">Uploading documents...</p>}
           <ul className="mt-2 text-sm">
             {docs.map((d) => (
               <li key={d.url}><a href={d.url} className="underline" target="_blank" rel="noreferrer">{d.title}</a></li>
