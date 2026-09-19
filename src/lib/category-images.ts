@@ -1,5 +1,5 @@
 import { prisma, withDatabase } from "@/lib/prisma";
-import { clampFocus, type PhotoFocus } from "@/lib/photo-focus";
+import { clampFocus, clampZoom, DEFAULT_ZOOM, type PhotoFocus } from "@/lib/photo-focus";
 
 export const CATEGORY_CARDS = [
   {
@@ -32,7 +32,7 @@ function contentKey(id: CategoryCardId) {
 
 function fallbackImage(id: CategoryCardId): CategoryImage {
   const card = CATEGORY_CARDS.find((item) => item.id === id)!;
-  return { url: card.defaultUrl, focusX: 50, focusY: 50 };
+  return { url: card.defaultUrl, focusX: 50, focusY: 50, zoom: DEFAULT_ZOOM };
 }
 
 export function parseCategoryImage(value: unknown, id: CategoryCardId): CategoryImage {
@@ -47,6 +47,7 @@ export function parseCategoryImage(value: unknown, id: CategoryCardId): Category
       url: parsed.url.trim(),
       focusX: clampFocus(parsed.focusX),
       focusY: clampFocus(parsed.focusY),
+      zoom: clampZoom(parsed.zoom ?? parsed.focusZoom),
     };
   } catch {
     return fallback;

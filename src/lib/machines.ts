@@ -56,6 +56,7 @@ function toPublic(m: MachineWithMedia): PublicMachine {
         isMain: p.isMain,
         focusX: p.focusX,
         focusY: p.focusY,
+        zoom: p.focusZoom,
       })),
     documents: m.documents.map((d) => ({
       id: d.id,
@@ -281,6 +282,7 @@ export function coverPhoto(machine: { photos: PublicPhotoLike[] }) {
     url: photo?.url || "/images/placeholder-machine.svg",
     focusX: photo?.focusX ?? 50,
     focusY: photo?.focusY ?? 50,
+    zoom: photo?.zoom ?? 1,
   };
 }
 
@@ -288,4 +290,4 @@ export function mainPhoto(machine: { photos: PublicPhotoLike[] }) {
   return coverPhoto(machine).url;
 }
 
-type PublicPhotoLike = { url: string; isMain: boolean; focusX?: number; focusY?: number };
+type PublicPhotoLike = { url: string; isMain: boolean; focusX?: number; focusY?: number; zoom?: number };

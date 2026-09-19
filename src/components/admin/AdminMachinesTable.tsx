@@ -7,7 +7,7 @@ import { useMemo, useState } from "react";
 import { formatMoney, summarizeFinance } from "@/lib/finance";
 import { localePath } from "@/lib/paths";
 import { coverPhoto } from "@/lib/machines";
-import { objectPosition } from "@/lib/photo-focus";
+import { coverStyle } from "@/lib/photo-focus";
 import { DEMO_SLUGS } from "@/lib/demo-listings";
 import type { AdminMachine } from "@/types/machine";
 import { SoldDialog } from "./SoldDialog";
@@ -158,7 +158,7 @@ export function AdminMachinesTable({
                         alt=""
                         fill
                         className="object-cover"
-                        style={{ objectPosition: objectPosition(photo) }}
+                        style={coverStyle(photo)}
                       />
                     </div>
                   </td>

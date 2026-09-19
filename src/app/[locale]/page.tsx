@@ -7,7 +7,7 @@ import { COMPANY } from "@/lib/company";
 import { GermanyFlag, KosovoFlag } from "@/components/layout/GermanyMark";
 import { getRecentMachines, listPublicMachines } from "@/lib/machines";
 import { CATEGORY_CARDS, getCategoryImages } from "@/lib/category-images";
-import { objectPosition } from "@/lib/photo-focus";
+import { coverStyle } from "@/lib/photo-focus";
 import { getSiteTexts } from "@/lib/site-content";
 import { localePath } from "@/lib/paths";
 import { MachineCard } from "@/components/catalog/MachineCard";
@@ -95,8 +95,8 @@ export default async function HomePage({ params }: Props) {
                   src={c.image.url}
                   alt={c.title}
                   fill
-                  className="object-cover transition-transform duration-300 group-hover:scale-105"
-                  style={{ objectPosition: objectPosition(c.image) }}
+                  className="object-cover"
+                  style={coverStyle(c.image)}
                 />
               </div>
               <div className="p-5">

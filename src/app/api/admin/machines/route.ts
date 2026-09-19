@@ -43,6 +43,7 @@ export async function POST(request: NextRequest) {
         url: photo.url,
         focusX: photo.focusX,
         focusY: photo.focusY,
+        focusZoom: photo.zoom,
         orderIndex: i,
         isMain: i === (body.mainPhotoIndex ?? 0),
         alt: `${data.manufacturer} ${data.model}`,
