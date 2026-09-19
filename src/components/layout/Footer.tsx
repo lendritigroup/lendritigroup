@@ -26,7 +26,6 @@ export function Footer() {
           <BrandLogo onDark className="mb-4" width={180} height={180} imgClassName="h-16 w-auto" />
           <p className="text-sm text-white/70">{tf("trading")}</p>
           <p className="mt-3 text-sm leading-relaxed text-white/70">{COMPANY.name}</p>
-          <SocialLinks className="mt-4" />
         </div>
         <div>
           <h3 className="mb-4 text-sm">{t("marketplace")}</h3>
@@ -57,10 +56,6 @@ export function Footer() {
               <Phone className="mt-0.5 size-4 shrink-0" />
               WhatsApp {COMPANY.whatsapp}
             </a>
-            <a href={COMPANY.germany.phoneHref} className="flex items-start gap-2 hover:text-white">
-              <GermanyMark className="mt-0.5" />
-              {COMPANY.germany.phone}
-            </a>
             <a href={COMPANY.germany.whatsappHref} className="flex items-start gap-2 hover:text-white" target="_blank" rel="noreferrer">
               <GermanyMark className="mt-0.5" />
               WhatsApp {COMPANY.germany.whatsapp}
@@ -79,6 +74,9 @@ export function Footer() {
             </p>
           </div>
         </div>
+      </div>
+      <div className="flex justify-center pb-8">
+        <SocialLinks />
       </div>
       <div className="border-t border-white/10">
         <div className="container-lg flex flex-col items-center justify-between gap-3 py-5 sm:flex-row">

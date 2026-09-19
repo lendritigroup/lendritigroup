@@ -167,7 +167,7 @@ export async function MachineDetail({
         <aside className="space-y-5 lg:sticky lg:top-28 lg:self-start">
           <div className="border border-border bg-card p-5">
             <div className="mb-4 flex items-center gap-3">
-              <Image src="/images/logo.png" alt={COMPANY.name} width={72} height={72} className="h-14 w-14 object-contain" />
+              <Image src="/images/logo-mark.png" alt={COMPANY.name} width={72} height={72} className="h-14 w-14 bg-navy object-contain p-1" />
               <div>
                 <p className="font-semibold">{COMPANY.name}</p>
                 <p className="text-xs text-muted-foreground">{COMPANY.city}, {COMPANY.country}</p>
@@ -207,7 +207,6 @@ export async function MachineDetail({
             <p className="mt-4 text-xs text-muted-foreground">
               {COMPANY.phone}<br />
               WhatsApp {COMPANY.whatsapp}<br />
-              DE {COMPANY.germany.phone}<br />
               WhatsApp DE {COMPANY.germany.whatsapp}<br />
               {COMPANY.addressOneLine}
             </p>
