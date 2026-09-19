@@ -96,7 +96,7 @@ export default async function HomePage({ params }: Props) {
           {categories.map((c) => (
             <Link key={c.href} href={localePath(locale, c.href)} className="group overflow-hidden border border-border bg-card">
               <div className="relative aspect-[16/10] bg-muted">
-                <Image src={c.image} alt={c.title} fill className="object-contain object-center transition-transform duration-300 group-hover:scale-105" />
+                <Image src={c.image} alt={c.title} fill className="object-cover object-center transition-transform duration-300 group-hover:scale-105" />
               </div>
               <div className="p-5">
                 <h3 className="text-xl">{c.title}</h3>

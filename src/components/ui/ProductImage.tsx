@@ -21,7 +21,7 @@ export function ProductImage({
   fill = true,
   sizes,
   priority,
-  className = "object-contain object-center",
+  className = "object-cover object-center",
 }: ProductImageProps) {
   const isExternal = src.startsWith("http");
 
