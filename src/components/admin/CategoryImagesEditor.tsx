@@ -49,7 +49,7 @@ export function CategoryImagesEditor({ initial }: { initial: CategoryImageMap })
     <section className="border border-border bg-card p-6">
       <h2 className="text-xl">Homepage category cards</h2>
       <p className="mt-2 text-sm text-muted-foreground">
-        The current Ekskavatorë, Kamionë and Makineri tjetër photos are loaded here. Drag to move, zoom with + / − or the slider, or replace the image. Save to show the change on the homepage.
+        The current Ekskavatorë, Kamionë and Makineri tjetër photos are loaded here. Drag to move, pinch with two fingers or hold Ctrl and press + / − to zoom, or replace the image. Save to show the change on the homepage.
       </p>
       <div className="mt-5 grid gap-4 md:grid-cols-3">
         {CATEGORY_CARDS.map((card) => {
