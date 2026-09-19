@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { coverStyle, clampZoom, type CropChange } from "@/lib/photo-focus";
+import { clampZoom, type CropChange } from "@/lib/photo-focus";
+import { CroppedPhoto } from "@/components/media/CroppedPhoto";
 
 type Point = { x: number; y: number };
 
@@ -160,13 +161,13 @@ export function PhotoCropFrame({
       onPointerCancel={endPointer}
       className={`relative w-full touch-none overflow-hidden bg-muted outline-none ${className}`}
     >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
+      <CroppedPhoto
         src={url}
         alt=""
-        draggable={false}
-        className="absolute inset-0 h-full w-full cursor-grab object-cover active:cursor-grabbing"
-        style={coverStyle({ focusX, focusY, zoom })}
+        focusX={focusX}
+        focusY={focusY}
+        zoom={zoom}
+        imgClassName="cursor-grab active:cursor-grabbing"
       />
     </div>
   );

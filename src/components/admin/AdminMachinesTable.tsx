@@ -1,13 +1,12 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import { formatMoney, summarizeFinance } from "@/lib/finance";
 import { localePath } from "@/lib/paths";
 import { coverPhoto } from "@/lib/machines";
-import { coverStyle } from "@/lib/photo-focus";
+import { CroppedPhoto } from "@/components/media/CroppedPhoto";
 import { DEMO_SLUGS } from "@/lib/demo-listings";
 import type { AdminMachine } from "@/types/machine";
 import { SoldDialog } from "./SoldDialog";
@@ -153,13 +152,7 @@ export function AdminMachinesTable({
                   </td>
                   <td className="p-3">
                     <div className="relative h-12 w-16 overflow-hidden bg-muted">
-                      <Image
-                        src={photo.url}
-                        alt=""
-                        fill
-                        className="object-cover"
-                        style={coverStyle(photo)}
-                      />
+                      <CroppedPhoto src={photo.url} alt="" focusX={photo.focusX} focusY={photo.focusY} zoom={photo.zoom} />
                     </div>
                   </td>
                   <td className="p-3">{m.manufacturer}</td>

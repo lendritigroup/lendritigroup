@@ -1,9 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
-import { coverStyle } from "@/lib/photo-focus";
+import { CroppedPhoto } from "@/components/media/CroppedPhoto";
 
 export function ProductGallery({
   photos,
@@ -51,13 +50,12 @@ export function ProductGallery({
         className="relative aspect-[4/3] w-full overflow-hidden border border-border bg-muted"
         aria-label="Enlarge photo"
       >
-        <Image
+        <CroppedPhoto
           src={current.url}
           alt={current.alt || title}
-          fill
-          className="object-cover"
-          style={coverStyle(current)}
-          priority
+          focusX={current.focusX}
+          focusY={current.focusY}
+          zoom={current.zoom}
         />
       </button>
       {list.length > 1 && (
@@ -73,12 +71,12 @@ export function ProductGallery({
               }}
               className={`relative aspect-[4/3] overflow-hidden border ${i === active ? "border-navy" : "border-border"}`}
             >
-              <Image
+              <CroppedPhoto
                 src={p.url}
                 alt={p.alt || `${title} ${i + 1}`}
-                fill
-                className="object-cover"
-                style={coverStyle(p)}
+                focusX={p.focusX}
+                focusY={p.focusY}
+                zoom={p.zoom}
               />
             </button>
           ))}
