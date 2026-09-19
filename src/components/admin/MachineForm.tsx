@@ -312,7 +312,7 @@ export function MachineForm({
         </label>
         {photos.length > 0 && (
           <p className="mt-3 text-xs text-muted-foreground">
-            Drag each photo to move it. Use + / −, the slider or the scroll wheel to zoom. Save the machine to keep the crop.
+            Drag a photo to move it. Pinch with two fingers, or hold Ctrl and press + / −, to zoom. Save the machine to keep the crop.
           </p>
         )}
         <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
