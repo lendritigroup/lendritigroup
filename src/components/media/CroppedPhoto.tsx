@@ -22,11 +22,13 @@ export function CroppedPhoto({
   imgClassName?: string;
 }) {
   const frameRef = useRef<HTMLDivElement>(null);
+  const imgRef = useRef<HTMLImageElement>(null);
   const [frame, setFrame] = useState({ w: 0, h: 0 });
   const [natural, setNatural] = useState({ w: 0, h: 0 });
 
   useEffect(() => {
     setNatural({ w: 0, h: 0 });
+    if (imgRef.current) applyNatural(imgRef.current);
   }, [src]);
 
   useEffect(() => {
@@ -34,7 +36,7 @@ export function CroppedPhoto({
     if (!el) return;
     const sync = () => {
       const box = el.getBoundingClientRect();
-      setFrame({ w: box.width, h: box.height });
+      setFrame((prev) => (prev.w === box.width && prev.h === box.height ? prev : { w: box.width, h: box.height }));
     };
     sync();
     const observer = new ResizeObserver(sync);
@@ -42,10 +44,13 @@ export function CroppedPhoto({
     return () => observer.disconnect();
   }, []);
 
-  function readNatural(img: HTMLImageElement | null) {
-    if (img && img.complete && img.naturalWidth) {
-      setNatural({ w: img.naturalWidth, h: img.naturalHeight });
-    }
+  function applyNatural(img: HTMLImageElement) {
+    if (!img.naturalWidth || !img.naturalHeight) return;
+    setNatural((prev) =>
+      prev.w === img.naturalWidth && prev.h === img.naturalHeight
+        ? prev
+        : { w: img.naturalWidth, h: img.naturalHeight }
+    );
   }
 
   const ready = frame.w > 0 && natural.w > 0 && natural.h > 0;
@@ -60,11 +65,11 @@ export function CroppedPhoto({
     <div ref={frameRef} className={cn("absolute inset-0 overflow-hidden", className)}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
+        ref={imgRef}
         src={src}
         alt={alt}
         draggable={false}
-        ref={readNatural}
-        onLoad={(e) => readNatural(e.currentTarget)}
+        onLoad={(e) => applyNatural(e.currentTarget)}
         className={cn("max-w-none", imgClassName)}
         style={
           ready
