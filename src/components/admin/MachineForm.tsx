@@ -10,6 +10,8 @@ import { localePath } from "@/lib/paths";
 import { machineSlug } from "@/lib/slug";
 import type { MachineCategory } from "@/lib/company";
 import type { AdminMachine } from "@/types/machine";
+import type { PhotoFocus } from "@/lib/photo-focus";
+import { PhotoCropFrame } from "./PhotoCropFrame";
 
 function dateInput(value?: string | null) {
   return value ? value.slice(0, 10) : "";
@@ -32,7 +34,9 @@ export function MachineForm({
 }) {
   const router = useRouter();
   const [category, setCategory] = useState<MachineCategory>(machine?.category ?? "excavator");
-  const [photos, setPhotos] = useState<string[]>(machine?.photos.map((p) => p.url) ?? []);
+  const [photos, setPhotos] = useState<PhotoFocus[]>(
+    machine?.photos.map((p) => ({ url: p.url, focusX: p.focusX ?? 50, focusY: p.focusY ?? 50 })) ?? []
+  );
   const [mainIndex, setMainIndex] = useState(Math.max(0, machine?.photos.findIndex((p) => p.isMain) ?? 0));
   const [docs, setDocs] = useState<{ url: string; title: string }[]>(
     machine?.documents.map((d) => ({ url: d.url, title: d.title })) ?? []
@@ -83,7 +87,9 @@ export function MachineForm({
         });
         if (blob?.url) urls.push(blob.url);
       }
-      if (kind === "photo") setPhotos((p) => [...p, ...urls]);
+      if (kind === "photo") {
+        setPhotos((p) => [...p, ...urls.map((url) => ({ url, focusX: 50, focusY: 50 }))]);
+      }
       else setDocs((d) => [...d, ...urls.map((url) => ({ url, title: url.split("/").pop() || "Document" }))]);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Upload failed");
@@ -304,16 +310,66 @@ export function MachineForm({
             }}
           />
         </label>
+        {photos.length > 0 && (
+          <p className="mt-3 text-xs text-muted-foreground">
+            Drag each photo to choose the cropped area. Save the machine to keep the position.
+          </p>
+        )}
         <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
-          {photos.map((url, i) => (
-            <div key={url} className="border border-border p-2">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={url} alt="" className="h-24 w-full object-cover" />
+          {photos.map((photo, i) => (
+            <div key={`${photo.url}-${i}`} className="border border-border p-2">
+              <PhotoCropFrame
+                url={photo.url}
+                focusX={photo.focusX}
+                focusY={photo.focusY}
+                onChange={({ x, y }) =>
+                  setPhotos((current) => current.map((item, idx) => (idx === i ? { ...item, focusX: x, focusY: y } : item)))
+                }
+              />
               <div className="mt-2 flex flex-wrap gap-2 text-xs">
                 <button type="button" onClick={() => setMainIndex(i)} className="underline">{i === mainIndex ? "Main" : "Set main"}</button>
-                <button type="button" onClick={() => setPhotos((p) => [...p.slice(0, i - 1), p[i], p[i - 1], ...p.slice(i + 1)].filter(Boolean))} disabled={i === 0}>Up</button>
-                <button type="button" onClick={() => setPhotos((p) => { const n = [...p]; [n[i], n[i + 1]] = [n[i + 1], n[i]]; return n; })} disabled={i === photos.length - 1}>Down</button>
-                <button type="button" onClick={() => setPhotos((p) => p.filter((_, idx) => idx !== i))} className="text-destructive">Delete</button>
+                <button
+                  type="button"
+                  disabled={i === 0}
+                  onClick={() => {
+                    setPhotos((current) => {
+                      const next = [...current];
+                      [next[i - 1], next[i]] = [next[i], next[i - 1]];
+                      return next;
+                    });
+                    setMainIndex((current) => (current === i ? i - 1 : current === i - 1 ? i : current));
+                  }}
+                >
+                  Up
+                </button>
+                <button
+                  type="button"
+                  disabled={i === photos.length - 1}
+                  onClick={() => {
+                    setPhotos((current) => {
+                      const next = [...current];
+                      [next[i], next[i + 1]] = [next[i + 1], next[i]];
+                      return next;
+                    });
+                    setMainIndex((current) => (current === i ? i + 1 : current === i + 1 ? i : current));
+                  }}
+                >
+                  Down
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPhotos((current) => current.filter((_, idx) => idx !== i));
+                    setMainIndex((current) => {
+                      if (current === i) return 0;
+                      if (current > i) return current - 1;
+                      return current;
+                    });
+                  }}
+                  className="text-destructive"
+                >
+                  Delete
+                </button>
               </div>
             </div>
           ))}

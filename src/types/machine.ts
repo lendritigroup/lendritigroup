@@ -6,6 +6,8 @@ export type PublicPhoto = {
   alt: string | null;
   orderIndex: number;
   isMain: boolean;
+  focusX: number;
+  focusY: number;
 };
 
 export type PublicDocument = {

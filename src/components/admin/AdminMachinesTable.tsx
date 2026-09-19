@@ -6,7 +6,8 @@ import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import { formatMoney, summarizeFinance } from "@/lib/finance";
 import { localePath } from "@/lib/paths";
-import { mainPhoto } from "@/lib/machines";
+import { coverPhoto } from "@/lib/machines";
+import { objectPosition } from "@/lib/photo-focus";
 import { DEMO_SLUGS } from "@/lib/demo-listings";
 import type { AdminMachine } from "@/types/machine";
 import { SoldDialog } from "./SoldDialog";
@@ -144,6 +145,7 @@ export function AdminMachinesTable({
           <tbody>
             {machines.map((m) => {
               const fin = summarizeFinance(m);
+              const photo = coverPhoto(m);
               return (
                 <tr key={m.id} className="border-t align-top">
                   <td className="p-3">
@@ -151,7 +153,13 @@ export function AdminMachinesTable({
                   </td>
                   <td className="p-3">
                     <div className="relative h-12 w-16 overflow-hidden bg-muted">
-                      <Image src={mainPhoto(m)} alt="" fill className="object-cover object-center" />
+                      <Image
+                        src={photo.url}
+                        alt=""
+                        fill
+                        className="object-cover"
+                        style={{ objectPosition: objectPosition(photo) }}
+                      />
                     </div>
                   </td>
                   <td className="p-3">{m.manufacturer}</td>

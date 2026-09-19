@@ -3,6 +3,7 @@ import { requireAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { parseMachinePayload } from "@/lib/machine-payload";
 import { listAdminMachines, toAdmin } from "@/lib/machines";
+import { parsePhotoInputs } from "@/lib/photo-focus";
 
 export async function GET() {
   const admin = await requireAdmin();
@@ -34,14 +35,16 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  const photos: string[] = Array.isArray(body.photos) ? body.photos : [];
+  const photos = parsePhotoInputs(body.photos);
   if (photos.length) {
     await prisma.photo.createMany({
-      data: photos.map((url, i) => ({
+      data: photos.map((photo, i) => ({
         machineId: created.id,
-        url,
+        url: photo.url,
+        focusX: photo.focusX,
+        focusY: photo.focusY,
         orderIndex: i,
-        isMain: i === 0,
+        isMain: i === (body.mainPhotoIndex ?? 0),
         alt: `${data.manufacturer} ${data.model}`,
       })),
     });

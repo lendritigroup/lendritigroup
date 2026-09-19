@@ -3,7 +3,8 @@ import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { formatMoney, machineTitle } from "@/lib/finance";
 import { localePath } from "@/lib/paths";
-import { mainPhoto, publicPath } from "@/lib/machines";
+import { coverPhoto, publicPath } from "@/lib/machines";
+import { objectPosition } from "@/lib/photo-focus";
 import type { PublicMachine } from "@/types/machine";
 
 export async function MachineCard({
@@ -15,7 +16,7 @@ export async function MachineCard({
 }) {
   const t = await getTranslations({ locale, namespace: "marketplace" });
   const href = localePath(locale, publicPath(machine));
-  const photo = mainPhoto(machine);
+  const photo = coverPhoto(machine);
   const usage =
     machine.category === "truck" && machine.kilometres != null
       ? `${machine.kilometres.toLocaleString("de-DE")} ${t("km")}`
@@ -27,10 +28,11 @@ export async function MachineCard({
     <article className="group flex flex-col overflow-hidden border border-border bg-card shadow-sm">
       <Link href={href} className="relative block aspect-[4/3] overflow-hidden bg-muted">
         <Image
-          src={photo}
+          src={photo.url}
           alt={machineTitle(machine.manufacturer, machine.model, machine.year)}
           fill
-          className="object-cover object-center transition-transform duration-300 group-hover:scale-[1.03]"
+          className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+          style={{ objectPosition: objectPosition(photo) }}
           sizes="(max-width: 768px) 100vw, 33vw"
         />
         {machine.status === "sold" && (

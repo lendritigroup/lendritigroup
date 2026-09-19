@@ -3,6 +3,7 @@ import { requireAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { parseMachinePayload } from "@/lib/machine-payload";
 import { getAdminMachine, toAdmin } from "@/lib/machines";
+import { parsePhotoInputs } from "@/lib/photo-focus";
 
 type Ctx = { params: Promise<{ id: string }> };
 
@@ -32,12 +33,15 @@ export async function PATCH(request: NextRequest, ctx: Ctx) {
   });
 
   if (Array.isArray(body.photos)) {
+    const photos = parsePhotoInputs(body.photos);
     await prisma.photo.deleteMany({ where: { machineId: id } });
-    if (body.photos.length) {
+    if (photos.length) {
       await prisma.photo.createMany({
-        data: body.photos.map((url: string, i: number) => ({
+        data: photos.map((photo, i) => ({
           machineId: id,
-          url,
+          url: photo.url,
+          focusX: photo.focusX,
+          focusY: photo.focusY,
           orderIndex: i,
           isMain: i === (body.mainPhotoIndex ?? 0),
           alt: `${data.manufacturer} ${data.model}`,
