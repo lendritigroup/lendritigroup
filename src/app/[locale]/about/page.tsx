@@ -39,6 +39,7 @@ export default async function AboutPage({ params }: Props) {
               <span key={l} className="block">{l}</span>
             ))}
             <a href={COMPANY.phoneHref} className="mt-3 block text-navy">{COMPANY.phone}</a>
+            <a href={COMPANY.germany.phoneHref} className="block text-navy">DE {COMPANY.germany.phone}</a>
             <a href={COMPANY.emailHref} className="block text-navy">{COMPANY.email}</a>
           </p>
         </div>

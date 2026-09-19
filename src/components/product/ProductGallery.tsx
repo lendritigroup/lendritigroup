@@ -51,7 +51,7 @@ export function ProductGallery({
           src={list[active].url}
           alt={list[active].alt || title}
           fill
-          className="cursor-zoom-in object-cover"
+          className="cursor-zoom-in object-cover object-center"
           priority
         />
       </button>
@@ -68,7 +68,7 @@ export function ProductGallery({
               }}
               className={`relative aspect-[4/3] overflow-hidden border ${i === active ? "border-navy" : "border-border"}`}
             >
-              <Image src={p.url} alt={p.alt || `${title} ${i + 1}`} fill className="object-cover" />
+              <Image src={p.url} alt={p.alt || `${title} ${i + 1}`} fill className="object-cover object-center" />
             </button>
           ))}
         </div>

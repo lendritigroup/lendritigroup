@@ -13,6 +13,18 @@ export const COMPANY = {
   city: "Mitrovicë",
   country: "Kosovë",
   countryCode: "XK",
+  germany: {
+    label: "DE",
+    phone: "+49 174 2462506",
+    phoneHref: "tel:+491742462506",
+    whatsapp: "+49 174 2462506",
+    whatsappHref: "https://wa.me/491742462506",
+  },
+  social: {
+    instagram: "https://www.instagram.com/lendritigroupshpk",
+    facebook: "https://www.facebook.com/share/1UPuRYE91p/?mibextid=wwXIfr",
+    tiktok: "https://www.tiktok.com/@lendritigroupshpk",
+  },
 } as const;
 
 export const CATEGORY_SLUGS = {

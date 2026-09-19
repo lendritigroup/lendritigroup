@@ -9,6 +9,8 @@ import { localePath } from "@/lib/paths";
 import { defaultLocale, locales, type Locale } from "@/i18n/config";
 import { BrandLogo } from "./BrandLogo";
 import { LanguageSwitcher } from "./LanguageSwitcher";
+import { GermanyMark } from "./GermanyMark";
+import { SocialLinks } from "./SocialLinks";
 
 export function Footer() {
   const t = useTranslations("nav");
@@ -21,9 +23,10 @@ export function Footer() {
     <footer className="mt-auto bg-navy text-white">
       <div className="container-lg grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-4">
         <div>
-          <BrandLogo onDark className="mb-4" width={160} height={52} imgClassName="h-12" />
+          <BrandLogo onDark className="mb-4" width={180} height={180} imgClassName="h-16 w-auto" />
           <p className="text-sm text-white/70">{tf("trading")}</p>
           <p className="mt-3 text-sm leading-relaxed text-white/70">{COMPANY.name}</p>
+          <SocialLinks className="mt-4" />
         </div>
         <div>
           <h3 className="mb-4 text-sm">{t("marketplace")}</h3>
@@ -53,6 +56,14 @@ export function Footer() {
             <a href={COMPANY.whatsappHref} className="flex items-start gap-2 hover:text-white" target="_blank" rel="noreferrer">
               <Phone className="mt-0.5 size-4 shrink-0" />
               WhatsApp {COMPANY.whatsapp}
+            </a>
+            <a href={COMPANY.germany.phoneHref} className="flex items-start gap-2 hover:text-white">
+              <GermanyMark className="mt-0.5" />
+              {COMPANY.germany.phone}
+            </a>
+            <a href={COMPANY.germany.whatsappHref} className="flex items-start gap-2 hover:text-white" target="_blank" rel="noreferrer">
+              <GermanyMark className="mt-0.5" />
+              WhatsApp {COMPANY.germany.whatsapp}
             </a>
             <a href={COMPANY.emailHref} className="flex items-start gap-2 hover:text-white">
               <Mail className="mt-0.5 size-4 shrink-0" />

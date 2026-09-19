@@ -53,7 +53,7 @@ export default async function RootLayout({
               "@context": "https://schema.org",
               "@type": "LocalBusiness",
               name: COMPANY.name,
-              telephone: COMPANY.phone,
+              telephone: [COMPANY.phone, COMPANY.germany.phone],
               email: COMPANY.email,
               address: {
                 "@type": "PostalAddress",
