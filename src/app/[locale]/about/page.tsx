@@ -1,6 +1,7 @@
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import Image from "next/image";
 import { COMPANY } from "@/lib/company";
+import { KosovoFlag } from "@/components/layout/GermanyMark";
 import { getSiteTexts } from "@/lib/site-content";
 
 type Props = { params: Promise<{ locale: string }> };
@@ -38,7 +39,7 @@ export default async function AboutPage({ params }: Props) {
             {COMPANY.addressLines.map((l) => (
               <span key={l} className="block">{l}</span>
             ))}
-            <a href={COMPANY.phoneHref} className="mt-3 block text-navy">{COMPANY.phone}</a>
+            <a href={COMPANY.phoneHref} className="mt-3 inline-flex items-center gap-1.5 text-navy"><KosovoFlag /> {COMPANY.phone}</a>
             <a href={COMPANY.emailHref} className="block text-navy">{COMPANY.email}</a>
           </p>
         </div>
