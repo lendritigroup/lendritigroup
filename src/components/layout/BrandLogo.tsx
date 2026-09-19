@@ -2,7 +2,7 @@ import Image from "next/image";
 import { COMPANY } from "@/lib/company";
 import { cn } from "@/lib/utils";
 
-export const LOGO_SRC = "/images/logo.png";
+export const LOGO_SRC = "/images/logo-mark.png";
 
 export function BrandLogo({
   className,

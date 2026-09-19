@@ -3,7 +3,6 @@ import { Mail, MapPin, Phone } from "lucide-react";
 import { COMPANY } from "@/lib/company";
 import { ContactForm } from "@/components/contact/ContactForm";
 import { GermanyMark } from "@/components/layout/GermanyMark";
-import { SocialLinks } from "@/components/layout/SocialLinks";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -22,11 +21,9 @@ export default async function ContactPage({ params }: Props) {
         <div className="mt-8 space-y-4 text-sm">
           <p className="flex gap-3"><Phone className="size-4 mt-0.5" /><a href={COMPANY.phoneHref} className="hover:underline">{COMPANY.phone}</a></p>
           <p className="flex gap-3"><Phone className="size-4 mt-0.5" /><a href={COMPANY.whatsappHref} className="hover:underline">WhatsApp {COMPANY.whatsapp}</a></p>
-          <p className="flex gap-3"><GermanyMark className="mt-0.5" /><a href={COMPANY.germany.phoneHref} className="hover:underline">{COMPANY.germany.phone}</a></p>
           <p className="flex gap-3"><GermanyMark className="mt-0.5" /><a href={COMPANY.germany.whatsappHref} className="hover:underline">WhatsApp {COMPANY.germany.whatsapp}</a></p>
           <p className="flex gap-3"><Mail className="size-4 mt-0.5" /><a href={COMPANY.emailHref} className="hover:underline">{COMPANY.email}</a></p>
           <p className="flex gap-3"><MapPin className="size-4 mt-0.5" /><span>{COMPANY.addressLines.join(", ")}</span></p>
-          <SocialLinks className="pt-2" iconClassName="border-navy/20 text-navy hover:border-navy hover:text-navy" />
         </div>
       </div>
       <ContactForm />

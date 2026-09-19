@@ -4,7 +4,6 @@ import { setRequestLocale } from "next-intl/server";
 import { getTranslations } from "next-intl/server";
 import { ArrowRight, Mail, Phone } from "lucide-react";
 import { COMPANY } from "@/lib/company";
-import { SocialLinks } from "@/components/layout/SocialLinks";
 import { getFeaturedMachines, getRecentMachines, listPublicMachines } from "@/lib/machines";
 import { getSiteTexts } from "@/lib/site-content";
 import { localePath } from "@/lib/paths";
@@ -95,8 +94,8 @@ export default async function HomePage({ params }: Props) {
         <div className="mt-8 grid gap-5 md:grid-cols-3">
           {categories.map((c) => (
             <Link key={c.href} href={localePath(locale, c.href)} className="group overflow-hidden border border-border bg-card">
-              <div className="relative aspect-[16/10]">
-                <Image src={c.image} alt={c.title} fill className="object-cover object-center transition-transform duration-300 group-hover:scale-105" />
+              <div className="relative aspect-[16/10] bg-muted">
+                <Image src={c.image} alt={c.title} fill className="object-contain object-center transition-transform duration-300 group-hover:scale-105" />
               </div>
               <div className="p-5">
                 <h3 className="text-xl">{c.title}</h3>
@@ -161,11 +160,9 @@ export default async function HomePage({ params }: Props) {
             </div>
             <p className="mt-6 text-sm text-white/60">
               {COMPANY.phone}<br />
-              DE {COMPANY.germany.phone}<br />
               {COMPANY.email}<br />
               {COMPANY.addressOneLine}
             </p>
-            <SocialLinks className="mt-4" />
           </div>
         </div>
       </section>

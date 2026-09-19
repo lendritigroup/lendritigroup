@@ -11,7 +11,6 @@ import { defaultLocale, locales, type Locale } from "@/i18n/config";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { BrandLogo } from "./BrandLogo";
 import { GermanyMark } from "./GermanyMark";
-import { SocialLinks } from "./SocialLinks";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
@@ -49,10 +48,6 @@ export function Header() {
             <a href={COMPANY.whatsappHref} className="hover:text-white" target="_blank" rel="noreferrer">
               WhatsApp {COMPANY.whatsapp}
             </a>
-            <a href={COMPANY.germany.phoneHref} className="inline-flex items-center gap-1.5 hover:text-white">
-              <GermanyMark />
-              {COMPANY.germany.phone}
-            </a>
             <a href={COMPANY.germany.whatsappHref} className="inline-flex items-center gap-1.5 hover:text-white" target="_blank" rel="noreferrer">
               <GermanyMark />
               WhatsApp {COMPANY.germany.whatsapp}
@@ -62,10 +57,7 @@ export function Header() {
               {COMPANY.email}
             </a>
           </div>
-          <div className="flex items-center gap-3">
-            <SocialLinks />
-            <p className="hidden lg:block">{COMPANY.addressOneLine}</p>
-          </div>
+          <p className="hidden lg:block">{COMPANY.addressOneLine}</p>
         </div>
       </div>
       <div className="border-b border-white/10 bg-navy text-white">
@@ -127,9 +119,6 @@ export function Header() {
                   </Link>
                   <div className="mt-4 px-2">
                     <LanguageSwitcher />
-                  </div>
-                  <div className="mt-6 px-2">
-                    <SocialLinks />
                   </div>
                 </nav>
               </SheetContent>
