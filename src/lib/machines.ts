@@ -54,6 +54,8 @@ function toPublic(m: MachineWithMedia): PublicMachine {
         alt: p.alt,
         orderIndex: p.orderIndex,
         isMain: p.isMain,
+        focusX: p.focusX,
+        focusY: p.focusY,
       })),
     documents: m.documents.map((d) => ({
       id: d.id,
@@ -273,12 +275,17 @@ export function publicPath(machine: { category: string; slug: string }) {
   return `/${slug}/${machine.slug}`;
 }
 
-export function mainPhoto(machine: { photos: PublicPhotoLike[] }) {
-  return (
-    machine.photos.find((p) => p.isMain)?.url ||
-    machine.photos[0]?.url ||
-    "/images/placeholder-machine.svg"
-  );
+export function coverPhoto(machine: { photos: PublicPhotoLike[] }) {
+  const photo = machine.photos.find((p) => p.isMain) || machine.photos[0];
+  return {
+    url: photo?.url || "/images/placeholder-machine.svg",
+    focusX: photo?.focusX ?? 50,
+    focusY: photo?.focusY ?? 50,
+  };
 }
 
-type PublicPhotoLike = { url: string; isMain: boolean };
+export function mainPhoto(machine: { photos: PublicPhotoLike[] }) {
+  return coverPhoto(machine).url;
+}
+
+type PublicPhotoLike = { url: string; isMain: boolean; focusX?: number; focusY?: number };

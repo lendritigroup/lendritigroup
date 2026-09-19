@@ -99,6 +99,8 @@ model Photo {
   alt        String?
   orderIndex Int     @default(0)
   isMain     Boolean @default(false)
+  focusX     Float   @default(50)
+  focusY     Float   @default(50)
   createdAt  DateTime @default(now())
 }
 
