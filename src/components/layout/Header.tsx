@@ -62,14 +62,14 @@ export function Header() {
         </div>
       </div>
       <div className="border-b border-white/10 bg-navy text-white">
-        <div className="container-lg flex h-[76px] items-center gap-4 md:h-20">
+        <div className="container-lg flex h-14 items-center gap-4 md:h-[60px]">
           <Link href={localePath(locale, "/")} className="shrink-0">
             <BrandLogo
               onDark
               priority
               width={180}
               height={180}
-              imgClassName="h-14 w-auto md:h-16"
+              imgClassName="h-11 w-auto md:h-12"
             />
           </Link>
 

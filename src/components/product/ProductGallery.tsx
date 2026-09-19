@@ -1,8 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
+
+type Point = { x: number; y: number };
 
 export function ProductGallery({
   photos,
@@ -14,6 +16,17 @@ export function ProductGallery({
   const list = photos.length ? photos : [{ url: "/images/placeholder-machine.svg", alt: title }];
   const [active, setActive] = useState(0);
   const [open, setOpen] = useState(false);
+  const [positions, setPositions] = useState<Record<number, Point>>({});
+  const frameRef = useRef<HTMLDivElement>(null);
+  const dragRef = useRef<{
+    pointerId: number;
+    startX: number;
+    startY: number;
+    origin: Point;
+    moved: boolean;
+  } | null>(null);
+
+  const pos = positions[active] ?? { x: 50, y: 50 };
 
   const prev = useCallback(() => {
     setActive((i) => (i === 0 ? list.length - 1 : i - 1));
@@ -39,22 +52,82 @@ export function ProductGallery({
     };
   }, [open, next, prev]);
 
+  function clamp(value: number) {
+    return Math.min(100, Math.max(0, value));
+  }
+
+  function onPointerDown(e: React.PointerEvent<HTMLDivElement>) {
+    if (e.button !== 0) return;
+    e.currentTarget.setPointerCapture(e.pointerId);
+    dragRef.current = {
+      pointerId: e.pointerId,
+      startX: e.clientX,
+      startY: e.clientY,
+      origin: pos,
+      moved: false,
+    };
+  }
+
+  function onPointerMove(e: React.PointerEvent<HTMLDivElement>) {
+    const drag = dragRef.current;
+    if (!drag || drag.pointerId !== e.pointerId) return;
+    const box = frameRef.current?.getBoundingClientRect();
+    if (!box) return;
+    const dx = e.clientX - drag.startX;
+    const dy = e.clientY - drag.startY;
+    if (Math.abs(dx) + Math.abs(dy) > 4) drag.moved = true;
+    setPositions((current) => ({
+      ...current,
+      [active]: {
+        x: clamp(drag.origin.x - (dx / box.width) * 100),
+        y: clamp(drag.origin.y - (dy / box.height) * 100),
+      },
+    }));
+  }
+
+  function endDrag(e: React.PointerEvent<HTMLDivElement>) {
+    const drag = dragRef.current;
+    if (!drag || drag.pointerId !== e.pointerId) return;
+    const moved = drag.moved;
+    dragRef.current = null;
+    try {
+      e.currentTarget.releasePointerCapture(e.pointerId);
+    } catch {
+      /* already released */
+    }
+    if (!moved) setOpen(true);
+  }
+
   return (
     <div>
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        className="relative aspect-[4/3] w-full overflow-hidden border border-border bg-muted"
-        aria-label="Enlarge photo"
+      <div
+        ref={frameRef}
+        role="button"
+        tabIndex={0}
+        onClick={(e) => e.preventDefault()}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            setOpen(true);
+          }
+        }}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={endDrag}
+        onPointerCancel={endDrag}
+        className="relative aspect-[4/3] w-full touch-none overflow-hidden border border-border bg-muted"
+        aria-label="Drag to reposition crop, click to enlarge"
       >
         <Image
           src={list[active].url}
           alt={list[active].alt || title}
           fill
-          className="cursor-zoom-in object-cover object-center"
+          className="cursor-grab object-cover active:cursor-grabbing"
+          style={{ objectPosition: `${pos.x}% ${pos.y}%` }}
           priority
+          draggable={false}
         />
-      </button>
+      </div>
       {list.length > 1 && (
         <div className="mt-3 grid grid-cols-5 gap-2">
           {list.map((p, i) => (
@@ -68,7 +141,13 @@ export function ProductGallery({
               }}
               className={`relative aspect-[4/3] overflow-hidden border ${i === active ? "border-navy" : "border-border"}`}
             >
-              <Image src={p.url} alt={p.alt || `${title} ${i + 1}`} fill className="object-cover object-center" />
+              <Image
+                src={p.url}
+                alt={p.alt || `${title} ${i + 1}`}
+                fill
+                className="object-cover"
+                style={{ objectPosition: `${(positions[i] ?? { x: 50, y: 50 }).x}% ${(positions[i] ?? { x: 50, y: 50 }).y}%` }}
+              />
             </button>
           ))}
         </div>
