@@ -7,10 +7,10 @@ import { COMPANY } from "@/lib/company";
 import { GermanyFlag, KosovoFlag } from "@/components/layout/GermanyMark";
 import { getRecentMachines, listPublicMachines } from "@/lib/machines";
 import { CATEGORY_CARDS, getCategoryImages } from "@/lib/category-images";
-import { coverStyle } from "@/lib/photo-focus";
 import { getSiteTexts } from "@/lib/site-content";
 import { localePath } from "@/lib/paths";
 import { MachineCard } from "@/components/catalog/MachineCard";
+import { CroppedPhoto } from "@/components/media/CroppedPhoto";
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -91,12 +91,12 @@ export default async function HomePage({ params }: Props) {
           {categories.map((c) => (
             <Link key={c.href} href={localePath(locale, c.href)} className="group overflow-hidden border border-border bg-card">
               <div className="relative aspect-[16/10] bg-muted">
-                <Image
+                <CroppedPhoto
                   src={c.image.url}
                   alt={c.title}
-                  fill
-                  className="object-cover"
-                  style={coverStyle(c.image)}
+                  focusX={c.image.focusX}
+                  focusY={c.image.focusY}
+                  zoom={c.image.zoom}
                 />
               </div>
               <div className="p-5">

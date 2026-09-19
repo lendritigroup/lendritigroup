@@ -1,10 +1,9 @@
-import Image from "next/image";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { formatMoney, machineTitle } from "@/lib/finance";
 import { localePath } from "@/lib/paths";
 import { coverPhoto, publicPath } from "@/lib/machines";
-import { coverStyle } from "@/lib/photo-focus";
+import { CroppedPhoto } from "@/components/media/CroppedPhoto";
 import type { PublicMachine } from "@/types/machine";
 
 export async function MachineCard({
@@ -27,13 +26,12 @@ export async function MachineCard({
   return (
     <article className="group flex flex-col overflow-hidden border border-border bg-card shadow-sm">
       <Link href={href} className="relative block aspect-[4/3] overflow-hidden bg-muted">
-        <Image
+        <CroppedPhoto
           src={photo.url}
           alt={machineTitle(machine.manufacturer, machine.model, machine.year)}
-          fill
-          className="object-cover"
-          style={coverStyle(photo)}
-          sizes="(max-width: 768px) 100vw, 33vw"
+          focusX={photo.focusX}
+          focusY={photo.focusY}
+          zoom={photo.zoom}
         />
         {machine.status === "sold" && (
           <span className="status-sold absolute left-3 top-3 px-2.5 py-1 text-xs font-bold tracking-widest">
