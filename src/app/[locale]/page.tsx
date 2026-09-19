@@ -6,6 +6,8 @@ import { ArrowRight, Mail } from "lucide-react";
 import { COMPANY } from "@/lib/company";
 import { GermanyFlag, KosovoFlag } from "@/components/layout/GermanyMark";
 import { getRecentMachines, listPublicMachines } from "@/lib/machines";
+import { CATEGORY_CARDS, getCategoryImages } from "@/lib/category-images";
+import { objectPosition } from "@/lib/photo-focus";
 import { getSiteTexts } from "@/lib/site-content";
 import { localePath } from "@/lib/paths";
 import { MachineCard } from "@/components/catalog/MachineCard";
@@ -18,37 +20,37 @@ export default async function HomePage({ params }: Props) {
   const t = await getTranslations("home");
   const tn = await getTranslations("nav");
 
-  const [recent, excavators, trucks, other, content] = await Promise.all([
+  const [recent, excavators, trucks, other, content, categoryImages] = await Promise.all([
     getRecentMachines(6),
     listPublicMachines({ category: "excavators" }),
     listPublicMachines({ category: "trucks" }),
     listPublicMachines({ category: "other-machinery" }),
     getSiteTexts(locale),
+    getCategoryImages(),
   ]);
 
-  const categories = [
-    {
-      href: "/excavators",
-      title: tn("excavators"),
-      lead: t("excavatorsLead"),
-      count: excavators.length,
-      image: "/images/machines/category-excavators.png",
-    },
-    {
-      href: "/trucks",
-      title: tn("trucks"),
-      lead: t("trucksLead"),
-      count: trucks.length,
-      image: "/images/machines/category-trucks.png",
-    },
-    {
-      href: "/other-machinery",
-      title: tn("other"),
-      lead: t("otherLead"),
-      count: other.length,
-      image: "/images/machines/category-other.png",
-    },
-  ];
+  const counts = {
+    excavators: excavators.length,
+    trucks: trucks.length,
+    other: other.length,
+  };
+  const titles = {
+    excavators: tn("excavators"),
+    trucks: tn("trucks"),
+    other: tn("other"),
+  };
+  const leads = {
+    excavators: t("excavatorsLead"),
+    trucks: t("trucksLead"),
+    other: t("otherLead"),
+  };
+  const categories = CATEGORY_CARDS.map((card) => ({
+    href: card.href,
+    title: titles[card.id],
+    lead: leads[card.id],
+    count: counts[card.id],
+    image: categoryImages[card.id],
+  }));
 
   return (
     <div>
@@ -89,7 +91,13 @@ export default async function HomePage({ params }: Props) {
           {categories.map((c) => (
             <Link key={c.href} href={localePath(locale, c.href)} className="group overflow-hidden border border-border bg-card">
               <div className="relative aspect-[16/10] bg-muted">
-                <Image src={c.image} alt={c.title} fill className="object-cover object-center transition-transform duration-300 group-hover:scale-105" />
+                <Image
+                  src={c.image.url}
+                  alt={c.title}
+                  fill
+                  className="object-cover transition-transform duration-300 group-hover:scale-105"
+                  style={{ objectPosition: objectPosition(c.image) }}
+                />
               </div>
               <div className="p-5">
                 <h3 className="text-xl">{c.title}</h3>
