@@ -4,6 +4,7 @@ import { setRequestLocale } from "next-intl/server";
 import { getTranslations } from "next-intl/server";
 import { ArrowRight, Mail, Phone } from "lucide-react";
 import { COMPANY } from "@/lib/company";
+import { SocialLinks } from "@/components/layout/SocialLinks";
 import { getFeaturedMachines, getRecentMachines, listPublicMachines } from "@/lib/machines";
 import { getSiteTexts } from "@/lib/site-content";
 import { localePath } from "@/lib/paths";
@@ -32,21 +33,21 @@ export default async function HomePage({ params }: Props) {
       title: tn("excavators"),
       lead: t("excavatorsLead"),
       count: excavators.length,
-      image: "/images/machines/volvo-ec220e.png",
+      image: "/images/machines/category-excavators.png",
     },
     {
       href: "/trucks",
       title: tn("trucks"),
       lead: t("trucksLead"),
       count: trucks.length,
-      image: "/images/machines/volvo-fh16.png",
+      image: "/images/machines/category-trucks.png",
     },
     {
       href: "/other-machinery",
       title: tn("other"),
       lead: t("otherLead"),
       count: other.length,
-      image: "/images/machines/liebherr-crane.png",
+      image: "/images/machines/category-other.png",
     },
   ];
 
@@ -95,7 +96,7 @@ export default async function HomePage({ params }: Props) {
           {categories.map((c) => (
             <Link key={c.href} href={localePath(locale, c.href)} className="group overflow-hidden border border-border bg-card">
               <div className="relative aspect-[16/10]">
-                <Image src={c.image} alt={c.title} fill className="object-cover transition-transform duration-300 group-hover:scale-105" />
+                <Image src={c.image} alt={c.title} fill className="object-cover object-center transition-transform duration-300 group-hover:scale-105" />
               </div>
               <div className="p-5">
                 <h3 className="text-xl">{c.title}</h3>
@@ -151,15 +152,20 @@ export default async function HomePage({ params }: Props) {
               <a href={COMPANY.whatsappHref} target="_blank" rel="noreferrer" className="inline-flex h-11 items-center gap-2 bg-[#1f7a4d] px-4 text-xs font-semibold uppercase tracking-wider text-white">
                 {t("whatsapp")}
               </a>
+              <a href={COMPANY.germany.whatsappHref} target="_blank" rel="noreferrer" className="inline-flex h-11 items-center gap-2 bg-[#1f7a4d] px-4 text-xs font-semibold uppercase tracking-wider text-white">
+                {t("whatsapp")} DE
+              </a>
               <a href={COMPANY.emailHref} className="inline-flex h-11 items-center gap-2 border border-white/30 px-4 text-xs font-semibold uppercase tracking-wider">
                 <Mail className="size-4" /> {t("email")}
               </a>
             </div>
             <p className="mt-6 text-sm text-white/60">
               {COMPANY.phone}<br />
+              DE {COMPANY.germany.phone}<br />
               {COMPANY.email}<br />
               {COMPANY.addressOneLine}
             </p>
+            <SocialLinks className="mt-4" />
           </div>
         </div>
       </section>

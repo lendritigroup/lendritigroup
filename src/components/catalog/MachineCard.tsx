@@ -30,7 +30,7 @@ export async function MachineCard({
           src={photo}
           alt={machineTitle(machine.manufacturer, machine.model, machine.year)}
           fill
-          className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+          className="object-cover object-center transition-transform duration-300 group-hover:scale-[1.03]"
           sizes="(max-width: 768px) 100vw, 33vw"
         />
         {machine.status === "sold" && (

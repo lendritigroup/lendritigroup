@@ -9,7 +9,6 @@ export function BrandLogo({
   imgClassName,
   width = 180,
   height = 56,
-  onDark = false,
   priority = false,
 }: {
   className?: string;
@@ -23,7 +22,6 @@ export function BrandLogo({
     <span
       className={cn(
         "inline-flex items-center justify-center",
-        onDark && "bg-white px-2 py-1",
         className
       )}
     >

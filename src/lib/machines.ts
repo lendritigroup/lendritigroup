@@ -150,6 +150,11 @@ function orderBy(sort?: string) {
   }
 }
 
+/** Keep for-sale listings first; sold items always follow, in the same secondary order. */
+function availableFirst<T extends { status: string }>(machines: T[]): T[] {
+  return machines.slice().sort((a, b) => Number(a.status === "sold") - Number(b.status === "sold"));
+}
+
 const include = { photos: true, documents: true };
 
 export async function listPublicMachines(params: MachineFilters = {}) {
@@ -159,7 +164,7 @@ export async function listPublicMachines(params: MachineFilters = {}) {
       include,
       orderBy: orderBy(params.sort),
     });
-    return machines.map(toPublic);
+    return availableFirst(machines.map(toPublic));
   }, []);
 }
 

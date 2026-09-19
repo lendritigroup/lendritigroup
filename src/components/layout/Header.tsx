@@ -10,6 +10,8 @@ import { localePath } from "@/lib/paths";
 import { defaultLocale, locales, type Locale } from "@/i18n/config";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { BrandLogo } from "./BrandLogo";
+import { GermanyMark } from "./GermanyMark";
+import { SocialLinks } from "./SocialLinks";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
@@ -47,23 +49,34 @@ export function Header() {
             <a href={COMPANY.whatsappHref} className="hover:text-white" target="_blank" rel="noreferrer">
               WhatsApp {COMPANY.whatsapp}
             </a>
+            <a href={COMPANY.germany.phoneHref} className="inline-flex items-center gap-1.5 hover:text-white">
+              <GermanyMark />
+              {COMPANY.germany.phone}
+            </a>
+            <a href={COMPANY.germany.whatsappHref} className="inline-flex items-center gap-1.5 hover:text-white" target="_blank" rel="noreferrer">
+              <GermanyMark />
+              WhatsApp {COMPANY.germany.whatsapp}
+            </a>
             <a href={COMPANY.emailHref} className="inline-flex items-center gap-1.5 hover:text-white">
               <Mail className="size-3.5" />
               {COMPANY.email}
             </a>
           </div>
-          <p className="hidden sm:block">{COMPANY.addressOneLine}</p>
+          <div className="flex items-center gap-3">
+            <SocialLinks />
+            <p className="hidden lg:block">{COMPANY.addressOneLine}</p>
+          </div>
         </div>
       </div>
       <div className="border-b border-white/10 bg-navy text-white">
-        <div className="container-lg flex h-16 items-center gap-4 md:h-[72px]">
+        <div className="container-lg flex h-[76px] items-center gap-4 md:h-20">
           <Link href={localePath(locale, "/")} className="shrink-0">
             <BrandLogo
               onDark
               priority
-              width={160}
-              height={52}
-              imgClassName="h-11 md:h-12"
+              width={180}
+              height={180}
+              imgClassName="h-14 w-auto md:h-16"
             />
           </Link>
 
@@ -114,6 +127,9 @@ export function Header() {
                   </Link>
                   <div className="mt-4 px-2">
                     <LanguageSwitcher />
+                  </div>
+                  <div className="mt-6 px-2">
+                    <SocialLinks />
                   </div>
                 </nav>
               </SheetContent>

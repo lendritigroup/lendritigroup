@@ -151,7 +151,7 @@ export function AdminMachinesTable({
                   </td>
                   <td className="p-3">
                     <div className="relative h-12 w-16 overflow-hidden bg-muted">
-                      <Image src={mainPhoto(m)} alt="" fill className="object-cover" />
+                      <Image src={mainPhoto(m)} alt="" fill className="object-cover object-center" />
                     </div>
                   </td>
                   <td className="p-3">{m.manufacturer}</td>

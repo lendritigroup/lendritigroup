@@ -207,6 +207,8 @@ export async function MachineDetail({
             <p className="mt-4 text-xs text-muted-foreground">
               {COMPANY.phone}<br />
               WhatsApp {COMPANY.whatsapp}<br />
+              DE {COMPANY.germany.phone}<br />
+              WhatsApp DE {COMPANY.germany.whatsapp}<br />
               {COMPANY.addressOneLine}
             </p>
           </div>
