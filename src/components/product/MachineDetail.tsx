@@ -3,6 +3,7 @@ import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { Mail, Phone } from "lucide-react";
 import { COMPANY } from "@/lib/company";
+import { GermanyFlag, KosovoFlag } from "@/components/layout/GermanyMark";
 import { formatMoney } from "@/lib/finance";
 import { localePath } from "@/lib/paths";
 import { fieldsForCategory } from "@/lib/specs";
@@ -204,10 +205,10 @@ export async function MachineDetail({
                 <Mail className="mr-2 size-4" /> {COMPANY.email}
               </a>
             </div>
-            <p className="mt-4 text-xs text-muted-foreground">
-              {COMPANY.phone}<br />
-              WhatsApp {COMPANY.whatsapp}<br />
-              WhatsApp DE {COMPANY.germany.whatsapp}<br />
+            <p className="mt-4 space-y-1 text-xs text-muted-foreground">
+              <span className="flex items-center gap-1.5"><KosovoFlag /> {COMPANY.phone}</span>
+              <span className="flex items-center gap-1.5"><KosovoFlag /> WhatsApp {COMPANY.whatsapp}</span>
+              <span className="flex items-center gap-1.5"><GermanyFlag /> WhatsApp {COMPANY.germany.whatsapp}</span>
               {COMPANY.addressOneLine}
             </p>
           </div>

@@ -2,8 +2,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { setRequestLocale } from "next-intl/server";
 import { getTranslations } from "next-intl/server";
-import { ArrowRight, Mail, Phone } from "lucide-react";
+import { ArrowRight, Mail } from "lucide-react";
 import { COMPANY } from "@/lib/company";
+import { GermanyFlag, KosovoFlag } from "@/components/layout/GermanyMark";
 import { getFeaturedMachines, getRecentMachines, listPublicMachines } from "@/lib/machines";
 import { getSiteTexts } from "@/lib/site-content";
 import { localePath } from "@/lib/paths";
@@ -83,7 +84,7 @@ export default async function HomePage({ params }: Props) {
               {t("browseMarketplace")} <ArrowRight className="size-4" />
             </Link>
             <a href={COMPANY.phoneHref} className="inline-flex h-11 items-center gap-2 bg-white px-5 text-xs font-semibold uppercase tracking-wider text-navy">
-              <Phone className="size-4" /> {t("call")} {COMPANY.phone}
+              <KosovoFlag /> {t("call")} {COMPANY.phone}
             </a>
           </div>
         </div>
@@ -146,20 +147,20 @@ export default async function HomePage({ params }: Props) {
             <p className="mt-4 text-white/80">{t("contactBody")}</p>
             <div className="mt-6 flex flex-wrap gap-3">
               <a href={COMPANY.phoneHref} className="inline-flex h-11 items-center gap-2 bg-white px-4 text-xs font-semibold uppercase tracking-wider text-navy">
-                <Phone className="size-4" /> {t("call")}
+                <KosovoFlag /> {t("call")}
               </a>
               <a href={COMPANY.whatsappHref} target="_blank" rel="noreferrer" className="inline-flex h-11 items-center gap-2 bg-[#1f7a4d] px-4 text-xs font-semibold uppercase tracking-wider text-white">
-                {t("whatsapp")}
+                <KosovoFlag /> {t("whatsapp")}
               </a>
               <a href={COMPANY.germany.whatsappHref} target="_blank" rel="noreferrer" className="inline-flex h-11 items-center gap-2 bg-[#1f7a4d] px-4 text-xs font-semibold uppercase tracking-wider text-white">
-                {t("whatsapp")} DE
+                <GermanyFlag /> {t("whatsapp")}
               </a>
               <a href={COMPANY.emailHref} className="inline-flex h-11 items-center gap-2 border border-white/30 px-4 text-xs font-semibold uppercase tracking-wider">
                 <Mail className="size-4" /> {t("email")}
               </a>
             </div>
-            <p className="mt-6 text-sm text-white/60">
-              {COMPANY.phone}<br />
+            <p className="mt-6 space-y-1 text-sm text-white/60">
+              <span className="flex items-center gap-1.5"><KosovoFlag /> {COMPANY.phone}</span>
               {COMPANY.email}<br />
               {COMPANY.addressOneLine}
             </p>

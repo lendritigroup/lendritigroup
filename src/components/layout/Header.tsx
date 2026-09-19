@@ -3,14 +3,14 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { Mail, Menu, Phone } from "lucide-react";
+import { Mail, Menu } from "lucide-react";
 import { useState } from "react";
 import { COMPANY } from "@/lib/company";
 import { localePath } from "@/lib/paths";
 import { defaultLocale, locales, type Locale } from "@/i18n/config";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { BrandLogo } from "./BrandLogo";
-import { GermanyMark } from "./GermanyMark";
+import { GermanyFlag, KosovoFlag } from "./GermanyMark";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
@@ -42,14 +42,15 @@ export function Header() {
         <div className="container-lg flex flex-wrap items-center justify-between gap-2 py-1.5 text-xs">
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
             <a href={COMPANY.phoneHref} className="inline-flex items-center gap-1.5 hover:text-white">
-              <Phone className="size-3.5" />
+              <KosovoFlag />
               {COMPANY.phone}
             </a>
-            <a href={COMPANY.whatsappHref} className="hover:text-white" target="_blank" rel="noreferrer">
+            <a href={COMPANY.whatsappHref} className="inline-flex items-center gap-1.5 hover:text-white" target="_blank" rel="noreferrer">
+              <KosovoFlag />
               WhatsApp {COMPANY.whatsapp}
             </a>
             <a href={COMPANY.germany.whatsappHref} className="inline-flex items-center gap-1.5 hover:text-white" target="_blank" rel="noreferrer">
-              <GermanyMark />
+              <GermanyFlag />
               WhatsApp {COMPANY.germany.whatsapp}
             </a>
             <a href={COMPANY.emailHref} className="inline-flex items-center gap-1.5 hover:text-white">
