@@ -5,7 +5,7 @@ import { getTranslations } from "next-intl/server";
 import { ArrowRight, Mail } from "lucide-react";
 import { COMPANY } from "@/lib/company";
 import { GermanyFlag, KosovoFlag } from "@/components/layout/GermanyMark";
-import { getFeaturedMachines, getRecentMachines, listPublicMachines } from "@/lib/machines";
+import { getRecentMachines, listPublicMachines } from "@/lib/machines";
 import { getSiteTexts } from "@/lib/site-content";
 import { localePath } from "@/lib/paths";
 import { MachineCard } from "@/components/catalog/MachineCard";
@@ -18,8 +18,7 @@ export default async function HomePage({ params }: Props) {
   const t = await getTranslations("home");
   const tn = await getTranslations("nav");
 
-  const [featured, recent, excavators, trucks, other, content] = await Promise.all([
-    getFeaturedMachines(4),
+  const [recent, excavators, trucks, other, content] = await Promise.all([
     getRecentMachines(6),
     listPublicMachines({ category: "excavators" }),
     listPublicMachines({ category: "trucks" }),
@@ -77,12 +76,6 @@ export default async function HomePage({ params }: Props) {
             </button>
           </form>
           <div className="mt-6 flex flex-wrap gap-3">
-            <Link
-              href={localePath(locale, "/marketplace")}
-              className="inline-flex h-11 items-center gap-2 border border-white/30 px-5 text-xs font-semibold uppercase tracking-wider hover:bg-white/10"
-            >
-              {t("browseMarketplace")} <ArrowRight className="size-4" />
-            </Link>
             <a href={COMPANY.phoneHref} className="inline-flex h-11 items-center gap-2 bg-white px-5 text-xs font-semibold uppercase tracking-wider text-navy">
               <KosovoFlag /> {t("call")} {COMPANY.phone}
             </a>
@@ -108,19 +101,14 @@ export default async function HomePage({ params }: Props) {
         </div>
       </section>
 
-      <section className="bg-white py-16">
+      <section className="bg-white py-10">
         <div className="container-lg">
-          <div className="mb-8 flex items-end justify-between">
-            <h2 className="text-2xl">{t("featured")}</h2>
-            <Link href={localePath(locale, "/marketplace")} className="text-sm text-navy underline">
-              {t("browseMarketplace")}
-            </Link>
-          </div>
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {featured.map((m) => (
-              <MachineCard key={m.id} machine={m} locale={locale} />
-            ))}
-          </div>
+          <Link
+            href={localePath(locale, "/marketplace")}
+            className="flex items-center justify-center border border-navy bg-white px-6 py-5 text-xl font-semibold tracking-wide text-navy hover:bg-navy hover:text-white"
+          >
+            {t("browseStock")}
+          </Link>
         </div>
       </section>
 
