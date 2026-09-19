@@ -35,7 +35,7 @@ export function MachineForm({
   const router = useRouter();
   const [category, setCategory] = useState<MachineCategory>(machine?.category ?? "excavator");
   const [photos, setPhotos] = useState<PhotoFocus[]>(
-    machine?.photos.map((p) => ({ url: p.url, focusX: p.focusX ?? 50, focusY: p.focusY ?? 50 })) ?? []
+    machine?.photos.map((p) => ({ url: p.url, focusX: p.focusX ?? 50, focusY: p.focusY ?? 50, zoom: p.zoom ?? 1 })) ?? []
   );
   const [mainIndex, setMainIndex] = useState(Math.max(0, machine?.photos.findIndex((p) => p.isMain) ?? 0));
   const [docs, setDocs] = useState<{ url: string; title: string }[]>(
@@ -88,7 +88,7 @@ export function MachineForm({
         if (blob?.url) urls.push(blob.url);
       }
       if (kind === "photo") {
-        setPhotos((p) => [...p, ...urls.map((url) => ({ url, focusX: 50, focusY: 50 }))]);
+        setPhotos((p) => [...p, ...urls.map((url) => ({ url, focusX: 50, focusY: 50, zoom: 1 }))]);
       }
       else setDocs((d) => [...d, ...urls.map((url) => ({ url, title: url.split("/").pop() || "Document" }))]);
     } catch (err) {
@@ -312,7 +312,7 @@ export function MachineForm({
         </label>
         {photos.length > 0 && (
           <p className="mt-3 text-xs text-muted-foreground">
-            Drag each photo to choose the cropped area. Save the machine to keep the position.
+            Drag each photo to move it. Use + / −, the slider or the scroll wheel to zoom. Save the machine to keep the crop.
           </p>
         )}
         <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
@@ -322,8 +322,9 @@ export function MachineForm({
                 url={photo.url}
                 focusX={photo.focusX}
                 focusY={photo.focusY}
-                onChange={({ x, y }) =>
-                  setPhotos((current) => current.map((item, idx) => (idx === i ? { ...item, focusX: x, focusY: y } : item)))
+                zoom={photo.zoom}
+                onChange={({ x, y, zoom }) =>
+                  setPhotos((current) => current.map((item, idx) => (idx === i ? { ...item, focusX: x, focusY: y, zoom } : item)))
                 }
               />
               <div className="mt-2 flex flex-wrap gap-2 text-xs">

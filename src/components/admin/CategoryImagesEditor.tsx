@@ -37,7 +37,7 @@ export function CategoryImagesEditor({ initial }: { initial: CategoryImageMap })
     setStatus("idle");
     try {
       const url = await uploadImage(file);
-      setImages((current) => ({ ...current, [id]: { url, focusX: 50, focusY: 50 } }));
+      setImages((current) => ({ ...current, [id]: { url, focusX: 50, focusY: 50, zoom: 1 } }));
     } catch (err) {
       setError(err instanceof Error ? err.message : "Upload failed");
     } finally {
@@ -49,7 +49,7 @@ export function CategoryImagesEditor({ initial }: { initial: CategoryImageMap })
     <section className="border border-border bg-card p-6">
       <h2 className="text-xl">Homepage category cards</h2>
       <p className="mt-2 text-sm text-muted-foreground">
-        The current Ekskavatorë, Kamionë and Makineri tjetër photos are loaded here. Drag a photo to set the crop, or replace it. Save to show the change on the homepage.
+        The current Ekskavatorë, Kamionë and Makineri tjetër photos are loaded here. Drag to move, zoom with + / − or the slider, or replace the image. Save to show the change on the homepage.
       </p>
       <div className="mt-5 grid gap-4 md:grid-cols-3">
         {CATEGORY_CARDS.map((card) => {
@@ -61,11 +61,12 @@ export function CategoryImagesEditor({ initial }: { initial: CategoryImageMap })
                 url={image.url}
                 focusX={image.focusX}
                 focusY={image.focusY}
+                zoom={image.zoom}
                 className="aspect-[16/10]"
-                onChange={({ x, y }) =>
+                onChange={({ x, y, zoom }) =>
                   setImages((current) => ({
                     ...current,
-                    [card.id]: { ...current[card.id], focusX: x, focusY: y },
+                    [card.id]: { ...current[card.id], focusX: x, focusY: y, zoom },
                   }))
                 }
               />

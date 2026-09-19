@@ -4,7 +4,7 @@ import { getTranslations } from "next-intl/server";
 import { formatMoney, machineTitle } from "@/lib/finance";
 import { localePath } from "@/lib/paths";
 import { coverPhoto, publicPath } from "@/lib/machines";
-import { objectPosition } from "@/lib/photo-focus";
+import { coverStyle } from "@/lib/photo-focus";
 import type { PublicMachine } from "@/types/machine";
 
 export async function MachineCard({
@@ -31,8 +31,8 @@ export async function MachineCard({
           src={photo.url}
           alt={machineTitle(machine.manufacturer, machine.model, machine.year)}
           fill
-          className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
-          style={{ objectPosition: objectPosition(photo) }}
+          className="object-cover"
+          style={coverStyle(photo)}
           sizes="(max-width: 768px) 100vw, 33vw"
         />
         {machine.status === "sold" && (

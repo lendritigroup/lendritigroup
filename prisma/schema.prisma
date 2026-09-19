@@ -101,6 +101,7 @@ model Photo {
   isMain     Boolean @default(false)
   focusX     Float   @default(50)
   focusY     Float   @default(50)
+  focusZoom  Float   @default(1)
   createdAt  DateTime @default(now())
 }
 

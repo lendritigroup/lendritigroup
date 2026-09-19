@@ -1,21 +1,21 @@
 "use client";
 
 import { useRef } from "react";
-import { objectPosition } from "@/lib/photo-focus";
-
-type Point = { x: number; y: number };
+import { coverStyle, clampZoom, MIN_ZOOM, MAX_ZOOM, type CropChange } from "@/lib/photo-focus";
 
 export function PhotoCropFrame({
   url,
   focusX,
   focusY,
+  zoom,
   onChange,
   className = "aspect-[4/3]",
 }: {
   url: string;
   focusX: number;
   focusY: number;
-  onChange: (next: Point) => void;
+  zoom: number;
+  onChange: (next: CropChange) => void;
   className?: string;
 }) {
   const frameRef = useRef<HTMLDivElement>(null);
@@ -23,11 +23,20 @@ export function PhotoCropFrame({
     pointerId: number;
     startX: number;
     startY: number;
-    origin: Point;
+    originX: number;
+    originY: number;
   } | null>(null);
 
   function clamp(value: number) {
     return Math.min(100, Math.max(0, value));
+  }
+
+  function emit(next: Partial<CropChange>) {
+    onChange({
+      x: next.x ?? focusX,
+      y: next.y ?? focusY,
+      zoom: clampZoom(next.zoom ?? zoom),
+    });
   }
 
   function onPointerDown(e: React.PointerEvent<HTMLDivElement>) {
@@ -38,7 +47,8 @@ export function PhotoCropFrame({
       pointerId: e.pointerId,
       startX: e.clientX,
       startY: e.clientY,
-      origin: { x: focusX, y: focusY },
+      originX: focusX,
+      originY: focusY,
     };
   }
 
@@ -47,9 +57,9 @@ export function PhotoCropFrame({
     if (!drag || drag.pointerId !== e.pointerId) return;
     const box = frameRef.current?.getBoundingClientRect();
     if (!box) return;
-    onChange({
-      x: clamp(drag.origin.x - ((e.clientX - drag.startX) / box.width) * 100),
-      y: clamp(drag.origin.y - ((e.clientY - drag.startY) / box.height) * 100),
+    emit({
+      x: clamp(drag.originX - ((e.clientX - drag.startX) / box.width) * 100),
+      y: clamp(drag.originY - ((e.clientY - drag.startY) / box.height) * 100),
     });
   }
 
@@ -65,22 +75,56 @@ export function PhotoCropFrame({
   }
 
   return (
-    <div
-      ref={frameRef}
-      onPointerDown={onPointerDown}
-      onPointerMove={onPointerMove}
-      onPointerUp={endDrag}
-      onPointerCancel={endDrag}
-      className={`relative w-full touch-none overflow-hidden bg-muted ${className}`}
-    >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={url}
-        alt=""
-        draggable={false}
-        className="absolute inset-0 h-full w-full cursor-grab object-cover active:cursor-grabbing"
-        style={{ objectPosition: objectPosition({ focusX, focusY }) }}
-      />
+    <div>
+      <div
+        ref={frameRef}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={endDrag}
+        onPointerCancel={endDrag}
+        onWheel={(e) => {
+          e.preventDefault();
+          emit({ zoom: zoom + (e.deltaY > 0 ? -0.08 : 0.08) });
+        }}
+        className={`relative w-full touch-none overflow-hidden bg-muted ${className}`}
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={url}
+          alt=""
+          draggable={false}
+          className="absolute inset-0 h-full w-full cursor-grab object-cover active:cursor-grabbing"
+          style={coverStyle({ focusX, focusY, zoom })}
+        />
+      </div>
+      <div className="mt-2 flex items-center gap-2">
+        <button
+          type="button"
+          onClick={() => emit({ zoom: zoom - 0.1 })}
+          className="h-7 w-7 border border-border text-sm leading-none"
+          aria-label="Zoom out"
+        >
+          −
+        </button>
+        <input
+          type="range"
+          min={MIN_ZOOM}
+          max={MAX_ZOOM}
+          step={0.05}
+          value={zoom}
+          onChange={(e) => emit({ zoom: Number(e.target.value) })}
+          className="h-7 w-full accent-navy"
+          aria-label="Zoom"
+        />
+        <button
+          type="button"
+          onClick={() => emit({ zoom: zoom + 0.1 })}
+          className="h-7 w-7 border border-border text-sm leading-none"
+          aria-label="Zoom in"
+        >
+          +
+        </button>
+      </div>
     </div>
   );
 }

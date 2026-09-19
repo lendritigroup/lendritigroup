@@ -3,18 +3,18 @@
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
-import { objectPosition } from "@/lib/photo-focus";
+import { coverStyle } from "@/lib/photo-focus";
 
 export function ProductGallery({
   photos,
   title,
 }: {
-  photos: { url: string; alt?: string | null; focusX?: number; focusY?: number }[];
+  photos: { url: string; alt?: string | null; focusX?: number; focusY?: number; zoom?: number }[];
   title: string;
 }) {
   const list = photos.length
     ? photos
-    : [{ url: "/images/placeholder-machine.svg", alt: title, focusX: 50, focusY: 50 }];
+    : [{ url: "/images/placeholder-machine.svg", alt: title, focusX: 50, focusY: 50, zoom: 1 }];
   const [active, setActive] = useState(0);
   const [open, setOpen] = useState(false);
   const current = list[active];
@@ -56,7 +56,7 @@ export function ProductGallery({
           alt={current.alt || title}
           fill
           className="object-cover"
-          style={{ objectPosition: objectPosition(current) }}
+          style={coverStyle(current)}
           priority
         />
       </button>
@@ -78,7 +78,7 @@ export function ProductGallery({
                 alt={p.alt || `${title} ${i + 1}`}
                 fill
                 className="object-cover"
-                style={{ objectPosition: objectPosition(p) }}
+                style={coverStyle(p)}
               />
             </button>
           ))}

@@ -8,6 +8,7 @@ export type PublicPhoto = {
   isMain: boolean;
   focusX: number;
   focusY: number;
+  zoom: number;
 };
 
 export type PublicDocument = {
