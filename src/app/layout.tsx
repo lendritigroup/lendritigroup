@@ -29,6 +29,21 @@ export const metadata: Metadata = {
     title: "Lendriti Group SHPK",
     description: "Excavators, trucks and heavy machinery trading.",
     type: "website",
+    url: "https://lendritigroup.com",
+    siteName: "Lendriti Group SHPK",
+    locale: "sq_AL",
+    images: [
+      {
+        url: "/images/machines/category-excavators.png",
+        alt: "Ekskavatorë | Lendriti Group SHPK",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Lendriti Group SHPK",
+    description: "Excavators, trucks and heavy machinery trading.",
+    images: ["/images/machines/category-excavators.png"],
   },
 };
 
