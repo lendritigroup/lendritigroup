@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { setRequestLocale } from "next-intl/server";
@@ -13,6 +14,20 @@ import { MachineCard } from "@/components/catalog/MachineCard";
 import { CroppedPhoto } from "@/components/media/CroppedPhoto";
 
 type Props = { params: Promise<{ locale: string }> };
+
+export async function generateMetadata(): Promise<Metadata> {
+  const images = await getCategoryImages();
+  const url = images.excavators.url;
+  return {
+    openGraph: {
+      images: [{ url, alt: "Ekskavatorë | Lendriti Group SHPK" }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      images: [url],
+    },
+  };
+}
 
 export default async function HomePage({ params }: Props) {
   const { locale } = await params;
