@@ -137,3 +137,9 @@ model PageContent {
   contentDe String?
   updatedAt DateTime @updatedAt
 }
+
+model SiteStat {
+  id        String   @id
+  count     Int      @default(0)
+  updatedAt DateTime @updatedAt
+}
