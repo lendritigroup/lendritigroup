@@ -2,6 +2,7 @@ import Link from "next/link";
 import { setRequestLocale } from "next-intl/server";
 import { listAdminMachines } from "@/lib/machines";
 import { buildReports } from "@/lib/reports";
+import { getVisitCount } from "@/lib/visits";
 import { formatMoney } from "@/lib/finance";
 import { localePath } from "@/lib/paths";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,10 +13,11 @@ type Props = { params: Promise<{ locale: string }> };
 export default async function AdminDashboard({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const [machines, report] = await Promise.all([listAdminMachines(), buildReports()]);
+  const [machines, report, visits] = await Promise.all([listAdminMachines(), buildReports(), getVisitCount()]);
   const unsold = machines.filter((m) => m.status !== "sold" && m.status !== "archived").length;
 
-  const cards = [
+  const cards: { label: string; value: string | number; hint?: string }[] = [
+    { label: "Site visits", value: visits.toLocaleString(locale), hint: "One count per visit. Admin browsing is excluded." },
     { label: "Active listings", value: report.sales.forSale },
     { label: "Sold", value: report.sales.sold },
     { label: "Reserved", value: report.sales.reserved },
@@ -45,6 +47,7 @@ export default async function AdminDashboard({ params }: Props) {
             </CardHeader>
             <CardContent>
               <p className="text-2xl font-semibold">{c.value}</p>
+              {c.hint ? <p className="mt-2 text-xs text-muted-foreground">{c.hint}</p> : null}
             </CardContent>
           </Card>
         ))}
